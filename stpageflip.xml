@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="content" method="upgrade" version="4.0">
+    <name>PLG_CONTENT_STPAGEFLIP</name>
+    <author>Andreas Rottmann</author>
+    <version>1.0.0</version>
+    <license>MIT</license>
+    <copyright>Copyright (C) 2024</copyright>
+<description>
+  <![CDATA[
+    <h3>📘 stPageFlip Enhanced – Flipbook-Plugin für Joomla</h3>
+
+<p>Dieses Plugin integriert einen realistischen, blätterbaren Buch-Viewer in Joomla-Artikel – basierend auf der stPageFlip-Bibliothek – mit erweiterter Benutzeroberfläche, Zoom, Vollbild, Ton und mehr.</p>
+
+<h4>🧪 Anwendungsbeispiel:</h4>
+<pre><code>
+[book id="demo-book" img="verzeichnis-mit-bildern" pdf="optional-pdf-verzeichnis" color="#004080" hover="#0099ff" width="responsive" din_format="A4"]
+</code></pre>
+
+<h4>📁 Informationen zu Bild- und PDF-Pfaden</h4>
+<ul>
+    <li><code>img</code> und <code>pdf</code> sind Ordnernamen innerhalb von <code>images/stpageflip/</code>.</li>
+    <li><strong>Beispiel:</strong> <code>img="book1"</code> → lädt Bilder aus <code>images/stpageflip/book1/</code></li>
+    <li><strong>Beispiel:</strong> <code>pdf="book1"</code> → lädt PDF aus <code>images/stpageflip/book1/</code></li>
+    <li>💬 Diese Ordner müssen <strong>manuell angelegt</strong> werden und die entsprechenden Dateien enthalten.</li>
+</ul>
+
+<p><strong>Erforderliche Attribute:</strong> <code>id</code>, <code>img</code></p>
+
+<h4>⚙️ Verfügbare Attribute</h4>
+
+<style>
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+  th { background: #f2f2f2; }
+</style>
+
+<table>
+  <thead>
+    <tr><th>Attribut</th><th>Typ</th><th>Beschreibung</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>pdf</td><td>String</td><td>(Optional) Ordner für PDF-Download-Button</td></tr>
+    <tr><td>width</td><td>String</td><td>"responsive" oder feste Breite in px</td></tr>
+    <tr><td>height</td><td>String</td><td>Optionale feste Höhe in px</td></tr>
+    <tr><td>din_format</td><td>String</td><td>Format: A4, 16:9, Comic/Manga etc.</td></tr>
+    <tr><td>aspect_ratio</td><td>Float</td><td>Benutzerdefiniertes Seitenverhältnis</td></tr>
+    <tr><td>color</td><td>Hex</td><td>Farbe der Icons (z. B. #004080)</td></tr>
+    <tr><td>hover</td><td>Hex</td><td>Farbe beim Hovern</td></tr>
+    <tr><td>center-single</td><td>Boolean</td><td>Letzte Einzelseite zentrieren</td></tr>
+    <tr><td>mousewheel-scroll</td><td>Boolean</td><td>Blättern mit dem Mausrad</td></tr>
+    <tr><td>slider</td><td>Boolean</td><td>Seitenslider anzeigen</td></tr>
+    <tr><td>bt-options</td><td>Boolean</td><td>Button-Leiste anzeigen</td></tr>
+    <tr><td>home</td><td>Boolean</td><td>„Zur ersten Seite“-Button</td></tr>
+    <tr><td>download</td><td>Boolean</td><td>PDF-Download-Button anzeigen</td></tr>
+    <tr><td>prev</td><td>Boolean</td><td>Vorherige Seite</td></tr>
+    <tr><td>next</td><td>Boolean</td><td>Nächste Seite</td></tr>
+    <tr><td>zoom-in</td><td>Boolean</td><td>Hineinzoomen</td></tr>
+    <tr><td>zoom-out</td><td>Boolean</td><td>Herauszoomen</td></tr>
+    <tr><td>zoom-default</td><td>Boolean</td><td>Zoom zurücksetzen</td></tr>
+    <tr><td>zoom-dblclick</td><td>Boolean</td><td>Zoom bei Doppelklick</td></tr>
+    <tr><td>fullscreen</td><td>Boolean</td><td>Vollbild aktivieren</td></tr>
+    <tr><td>reflection</td><td>Boolean</td><td>Seitenreflexion anzeigen</td></tr>
+    <tr><td>tooltip</td><td>Boolean</td><td>Tooltips anzeigen</td></tr>
+    <tr><td>transform</td><td>Boolean</td><td>Verschieben/Bewegen erlauben</td></tr>
+    <tr><td>inside-button</td><td>Boolean</td><td>Interne Vor-/Zurück-Buttons</td></tr>
+    <tr><td>sound</td><td>Boolean</td><td>Umblätter-Sound aktivieren</td></tr>
+  </tbody>
+</table>
+
+<p><em>Alle Boolean-Attribute sind standardmäßig <code>true</code>, sofern nicht anders angegeben.</em></p>
+
+<h4>📐 Unterstützte <code>din_format</code> Werte</h4>
+
+<table>
+  <thead>
+    <tr><th>Name</th><th>Seitenverhältnis</th><th>Typ</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>A0</td><td>0.707</td><td>DIN A (Hochformat)</td></tr>
+    <tr><td>A1</td><td>0.706</td><td>DIN A (Hochformat)</td></tr>
+    <tr><td>A2</td><td>0.707</td><td>DIN A (Hochformat)</td></tr>
+    <tr><td>A3</td><td>0.707</td><td>DIN A (Hochformat)</td></tr>
+    <tr><td>A4</td><td>0.707</td><td>DIN A (Hochformat)</td></tr>
+    <tr><td>A5</td><td>0.705</td><td>DIN A (Hochformat)</td></tr>
+    <tr><td>A6</td><td>0.709</td><td>DIN A (Hochformat)</td></tr>
+    <tr><td>A7</td><td>0.705</td><td>DIN A (Hochformat)</td></tr>
+    <tr><td>A8</td><td>0.703</td><td>DIN A (Hochformat)</td></tr>
+
+    <tr><td>16:9</td><td>1.778</td><td>Bildschirm / Video</td></tr>
+    <tr><td>4:3</td><td>1.333</td><td>Bildschirm / Video</td></tr>
+    <tr><td>3:2</td><td>1.500</td><td>Bildschirm / Video</td></tr>
+    <tr><td>21:9</td><td>2.333</td><td>Ultra-Wide</td></tr>
+    <tr><td>1:1</td><td>1.000</td><td>Quadratisch</td></tr>
+    <tr><td>9:16</td><td>0.562</td><td>Vertikal / Mobil</td></tr>
+
+    <tr><td>5x7</td><td>0.714</td><td>Foto</td></tr>
+    <tr><td>8x10</td><td>0.800</td><td>Foto</td></tr>
+    <tr><td>2:3</td><td>0.667</td><td>Foto</td></tr>
+
+    <tr><td>Portrait Standard</td><td>0.707</td><td>Flipbook Klassisch</td></tr>
+    <tr><td>Comic/Manga</td><td>0.650</td><td>Flipbook Klassisch</td></tr>
+    <tr><td>Square</td><td>1.000</td><td>Flipbook Klassisch</td></tr>
+    <tr><td>Wide Book</td><td>1.400</td><td>Flipbook Klassisch</td></tr>
+  </tbody>
+</table>
+
+<p><em>Nutze das Attribut <code>din_format</code>, um automatisch ein vorkonfiguriertes Seitenverhältnis anzuwenden.</em></p>
+
+    <h3>📘 stPageFlip Enhanced – Flipbook Plugin for Joomla</h3>
+
+    <p>This plugin integrates a page-flipping book viewer into Joomla articles using the stPageFlip library with extended UI, zoom, fullscreen, and sound support.</p>
+
+    <h4>🧪 Usage Example:</h4>
+    <pre><code>
+    [book id="demo-book" img="folder-with-images" pdf="optional-pdf-folder, images/stpageflip/custom directory, must be creat before!" color="#004080" hover="#0099ff" width="responsive" din_format="A4"]
+    </code></pre>
+
+    <h4>📁 Image and PDF path info</h4>
+    <ul>
+        <li><code>img</code> and <code>pdf</code> are folder names located under <code>images/stpageflip/</code>.</li>
+        <li><strong>Example:</strong> <code>img="book1"</code> → loads images from <code>images/stpageflip/book1/</code></li>
+        <li><strong>Example:</strong> <code>pdf="book1"</code> → provides PDF from <code>images/stpageflip/book1/</code></li>
+        <li>💬 These folders must be <strong>manually created</strong> and contain the respective images or PDF files.</li>
+    </ul>
+
+    <p><strong>Required attributes:</strong> <code>id</code>, <code>img</code></p>
+
+    <h4>⚙️ Available Attributes</h4>
+
+    <style>
+      table { border-collapse: collapse; width: 100%; }
+      th, td { border: 1px solid #ccc; padding: 6px; text-align: left; }
+      th { background: #f2f2f2; }
+    </style>
+
+    <table>
+      <thead>
+        <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>pdf</td><td>String</td><td>(Optional) PDF folder for download button</td></tr>
+        <tr><td>width</td><td>String</td><td>"responsive" or fixed width in px</td></tr>
+        <tr><td>height</td><td>String</td><td>Optional fixed height in px</td></tr>
+        <tr><td>din_format</td><td>String</td><td>Format: A4, 16:9, Comic/Manga etc.</td></tr>
+        <tr><td>aspect_ratio</td><td>Float</td><td>Custom width/height ratio</td></tr>
+        <tr><td>color</td><td>Hex</td><td>Icon color (e.g. #004080)</td></tr>
+        <tr><td>hover</td><td>Hex</td><td>Hover icon color</td></tr>
+        <tr><td>center-single</td><td>Boolean</td><td>Center single last page</td></tr>
+        <tr><td>mousewheel-scroll</td><td>Boolean</td><td>Flip with mouse wheel</td></tr>
+        <tr><td>slider</td><td>Boolean</td><td>Show page slider</td></tr>
+        <tr><td>bt-options</td><td>Boolean</td><td>Show button controls</td></tr>
+        <tr><td>home</td><td>Boolean</td><td>Show "first page" button</td></tr>
+        <tr><td>download</td><td>Boolean</td><td>Show download button (PDF)</td></tr>
+        <tr><td>prev</td><td>Boolean</td><td>Previous page</td></tr>
+        <tr><td>next</td><td>Boolean</td><td>Next page</td></tr>
+        <tr><td>zoom-in</td><td>Boolean</td><td>Zoom in</td></tr>
+        <tr><td>zoom-out</td><td>Boolean</td><td>Zoom out</td></tr>
+        <tr><td>zoom-default</td><td>Boolean</td><td>Reset zoom</td></tr>
+        <tr><td>zoom-dblclick</td><td>Boolean</td><td>Double-click zoom</td></tr>
+        <tr><td>fullscreen</td><td>Boolean</td><td>Enable fullscreen mode</td></tr>
+        <tr><td>reflection</td><td>Boolean</td><td>Page reflection below</td></tr>
+        <tr><td>tooltip</td><td>Boolean</td><td>Show tooltips</td></tr>
+        <tr><td>transform</td><td>Boolean</td><td>Enable drag/move</td></tr>
+        <tr><td>inside-button</td><td>Boolean</td><td>Show internal nav buttons</td></tr>
+        <tr><td>sound</td><td>Boolean</td><td>Enable flip sound</td></tr>
+      </tbody>
+    </table>
+
+    <p><em>All boolean attributes default to <code>true</code> unless otherwise set.</em></p>
+
+    <h4>📐 Supported <code>din_format</code> values</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Aspect Ratio</th>
+      <th>Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- DIN A Series -->
+    <tr><td>A0</td><td>0.707</td><td>DIN A (portrait)</td></tr>
+    <tr><td>A1</td><td>0.706</td><td>DIN A (portrait)</td></tr>
+    <tr><td>A2</td><td>0.707</td><td>DIN A (portrait)</td></tr>
+    <tr><td>A3</td><td>0.707</td><td>DIN A (portrait)</td></tr>
+    <tr><td>A4</td><td>0.707</td><td>DIN A (portrait)</td></tr>
+    <tr><td>A5</td><td>0.705</td><td>DIN A (portrait)</td></tr>
+    <tr><td>A6</td><td>0.709</td><td>DIN A (portrait)</td></tr>
+    <tr><td>A7</td><td>0.705</td><td>DIN A (portrait)</td></tr>
+    <tr><td>A8</td><td>0.703</td><td>DIN A (portrait)</td></tr>
+
+    <!-- Screen / Video -->
+    <tr><td>16:9</td><td>1.778</td><td>Screen / Video</td></tr>
+    <tr><td>4:3</td><td>1.333</td><td>Screen / Video</td></tr>
+    <tr><td>3:2</td><td>1.500</td><td>Screen / Video</td></tr>
+    <tr><td>21:9</td><td>2.333</td><td>Ultra-Wide</td></tr>
+    <tr><td>1:1</td><td>1.000</td><td>Square</td></tr>
+    <tr><td>9:16</td><td>0.562</td><td>Vertical / Mobile</td></tr>
+
+    <!-- Photo Formats -->
+    <tr><td>5x7</td><td>0.714</td><td>Photo</td></tr>
+    <tr><td>8x10</td><td>0.800</td><td>Photo</td></tr>
+    <tr><td>2:3</td><td>0.667</td><td>Photo</td></tr>
+
+    <!-- Flipbook Specific -->
+    <tr><td>Portrait Standard</td><td>0.707</td><td>Flipbook Classic</td></tr>
+    <tr><td>Comic/Manga</td><td>0.650</td><td>Flipbook Classic</td></tr>
+    <tr><td>Square</td><td>1.000</td><td>Flipbook Classic</td></tr>
+    <tr><td>Wide Book</td><td>1.400</td><td>Flipbook Classic</td></tr>
+  </tbody>
+</table>
+
+<p><em>Use the <code>din_format</code> attribute to quickly apply a predefined aspect ratio.</em></p>
+
+  ]]>
+</description>
+
+
+    <!-- Namespace für Plugin-Klasse -->
+    <namespace path="src">Joomla\Plugin\Content\Stpageflip</namespace>
+
+    <!-- Dateien, die beim Installieren kopiert werden -->
+    <files>
+        <folder plugin="stpageflip">services</folder>
+        <folder>src</folder>
+        <folder>js</folder>
+        <folder>mp3</folder>
+        <folder>css</folder>
+        <folder>php</folder>
+        <filename>src/index.html</filename>
+        <filename>src/Extension/index.html</filename>
+        <filename>services/index.html</filename>
+        <filename>js/index.html</filename>
+        <filename>mp3/index.html</filename>
+        <filename>css/index.html</filename>
+        <filename>css/bootstrap_ico/index.html</filename>
+        <filename>css/bootstrap_ico/fonts/index.html</filename>
+        <filename>php/index.html</filename>
+   
+
+    </files>
+    <events>
+    <event>onAfterInitialise</event>
+</events>
+
+    <!-- ServiceProvider für Joomla 4/5 -->
+    <services>
+        <service type="content">services/provider.php</service>
+    </services>
+
+    <!-- Backend-Konfiguration -->
+    <config>
+    <fields name="params">
+        <fieldset name="basic" label="Grundeinstellungen">
+        <field
+            name="info_note"
+            type="spacer"
+            label="Hinweis"
+            description="Legen Sie Ihre Bilder in /images/stpageflip/ ab. Im Shortcode verwenden Sie dann.">
+        </field>
+            <field name="load_jquery" type="radio" default="0"
+                   label="jQuery laden?"
+                   description="Soll jQuery vom Plugin geladen werden (nur wenn nicht bereits im Template enthalten)?">
+                <option value="1">Ja</option>
+                <option value="0">Nein</option>
+            </field>
+
+            <field name="load_jqueryui" type="radio" default="1"
+                   label="jQuery UI laden?"
+                   description="Soll jQuery UI vom Plugin geladen werden?">
+                <option value="1">Ja</option>
+                <option value="0">Nein</option>
+            </field>
+
+            <field name="load_bootstrap" type="radio" default="0"
+                label="Bootstrap CSS laden?"
+                description="Soll die Datei bootstrap.css vom Plugin eingebunden werden?">
+                <option value="1">Ja</option>
+                <option value="0">Nein</option>
+            </field>
+
+            <field name="load_bootstrap_icons" type="radio" default="1"
+                label="Bootstrap Icons laden?"
+                description="Soll die Datei bootstrap-icons.css vom Plugin eingebunden werden?">
+                <option value="1">Ja</option>
+                <option value="0">Nein</option>
+            </field>
+
+        </fieldset>
+    </fields>
+</config>
+</extension>
