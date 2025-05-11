@@ -227,7 +227,6 @@
         <folder>js</folder>
         <folder>mp3</folder>
         <folder>css</folder>
-        <folder>php</folder>
         <filename>src/index.html</filename>
         <filename>src/Extension/index.html</filename>
         <filename>services/index.html</filename>

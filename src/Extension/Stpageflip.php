@@ -92,6 +92,10 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
         if (!is_object($article) || empty($article->text)) {
             return;
         }
+        if (!isset($article->id) || !isset($article->alias)) {
+            return;
+        }
+        
 
          // Plugin läuft, aber tut nichts
         //Factory::getApplication()->enqueueMessage('Stpageflip Plugin: Testlauf');
@@ -154,7 +158,7 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
         foreach ($matches as $match) {
             $attrs = $this->parseAttributes($match[1]);
         
-            $bookId = !empty($attrs['id']) ? $attrs['id'] : uniqid('book_');
+            $bookId = isset($attrs['id']) && $attrs['id'] !== '' ? $attrs['id'] : uniqid('book_');
             $imgFolder = JPATH_ROOT . '/images/stpageflip/' . trim($attrs['img'] ?? '', '/');
             $pdfFolder = JPATH_ROOT . '/images/stpageflip/' . trim($attrs['pdf'] ?? '', '/');
         
