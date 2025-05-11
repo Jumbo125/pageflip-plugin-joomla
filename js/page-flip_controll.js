@@ -1,9 +1,9 @@
-jQuery(document).ready(function(){
-  jQuery("body").find(".flip-book").each(function(){
-      const id = jQuery(this).attr('id');
-          if (id) {
-              controlls_for_book('#' + id);
-          }
+jQuery(document).ready(function () {
+  jQuery("body").find(".flip-book").each(function () {
+    const id = jQuery(this).attr('id');
+    if (id) {
+      controlls_for_book('#' + id);
+    }
   });
 });
 
@@ -13,11 +13,11 @@ const lastDblClick = new WeakMap();
 let userInteracted = false;
 // Registrierung der ersten User-Interaktion
 function handleFirstInteraction() {
-    userInteracted = true;
-    // Listener entfernen
-    document.removeEventListener('mousedown', handleFirstInteraction);
-    document.removeEventListener('touchstart', handleFirstInteraction);
-  
+  userInteracted = true;
+  // Listener entfernen
+  document.removeEventListener('mousedown', handleFirstInteraction);
+  document.removeEventListener('touchstart', handleFirstInteraction);
+
 }
 document.addEventListener('mousedown', handleFirstInteraction);
 document.addEventListener('touchstart', handleFirstInteraction);
@@ -54,7 +54,7 @@ function getRelativePhpPath(scriptName, phpSubPath) {
 
 
 function controlls_for_book(ID, data_height, data_width, aspect_ratio, din_format, single_center, mousewheel_scroll, density, slider, bt_options, home, download, prev, next, zoom_in, zoom_out, zoom_default, zoom_dblclick, fullscreen, reflection, tooltip, sound, transform, inside_button, color, color_hover) {
-  
+
 
 
   // Arrays und variablen deklarieren###############################################
@@ -175,9 +175,9 @@ function controlls_for_book(ID, data_height, data_width, aspect_ratio, din_forma
   const $container = jQuery(buch_id);
   const download_pdf_link = jQuery(buch_id).data("pdf-src");
   const $turn_js_container = jQuery(buch_id);
-  const dir = $turn_js_container.data("img-src"); 
+  const dir = $turn_js_container.data("img-src");
   //const php_file = $turn_js_container.attr("data-base-path") + "php/request.php";
-  const php_file =  "php/request.php";
+  const php_file = "php/request.php";
 
   data_width = data_width !== undefined ? data_width : getAttrValue($container, "width", "false");
   data_height = data_height !== undefined ? data_height : getAttrValue($container, "height", "false");
@@ -217,48 +217,48 @@ function controlls_for_book(ID, data_height, data_width, aspect_ratio, din_forma
   }
 
 
-const $img_files = jQuery(buch_id + '_img_files');
-const filenames = $img_files.val().split(',');
-const img_files_dir = $img_files.data('img-path');
+  const $img_files = jQuery(buch_id + '_img_files');
+  const filenames = $img_files.val().split(',');
+  const img_files_dir = $img_files.data('img-path');
 
-console.log(filenames + "test");
+  console.log(filenames + "test");
 
-      if (Array.isArray(filenames)) {
-        for (let i = 0; i < filenames.length; i++) {
-          const filename = filenames[i];
-          let pageDensity;
+  if (Array.isArray(filenames)) {
+    for (let i = 0; i < filenames.length; i++) {
+      const filename = filenames[i];
+      let pageDensity;
 
-          if (density === 'hard_book') {
-            if (i === 0 || i === filenames.length - 1) {
-              pageDensity = 'hard';
-            } else {
-              pageDensity = 'soft';
-            }
-          } else {
-            pageDensity = density; // z. B. 'hard' oder 'soft'
-          }
+      if (density === 'hard_book') {
+        if (i === 0 || i === filenames.length - 1) {
+          pageDensity = 'hard';
+        } else {
+          pageDensity = 'soft';
+        }
+      } else {
+        pageDensity = density; // z. B. 'hard' oder 'soft'
+      }
 
-          const $page = jQuery(`
+      const $page = jQuery(`
                   <div class="page" data-density="${pageDensity}">
                       <div class="page-image" style="background-image: url('${img_files_dir}/${filename}')"></div>
                   </div>
               `);
 
-          $turn_js_container.append($page);
-        }
+      $turn_js_container.append($page);
+    }
 
-        if (!$turn_js_container.data('has-turn')) {
-          if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", initPageFlip);
-          } else {
-            initPageFlip();
-          }
-        }
+    if (!$turn_js_container.data('has-turn')) {
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initPageFlip);
+      } else {
+        initPageFlip();
       }
-      else {
-        console.error('Antwort ist kein Array:', response);
-      }
- 
+    }
+  }
+  else {
+    console.error('Antwort ist kein Array:', response);
+  }
+
 
 
   function initPageFlip() {
@@ -370,6 +370,7 @@ console.log(filenames + "test");
             const rechte_seite = human_aktuelleSeite + 1;
             $controll_leiste.find('.current_page').html(linke_seite + " und " + rechte_seite);
             $controll_leiste.find('.all_sites').html(seitenanzahl);
+            $controll_leiste.find(".pdf-book-slider").val(linke_seite);
           }
           else if (human_aktuelleSeite % 2 !== 0) {
             //aktuelle seite ist eine ungarde zahl, daher ist die rechte Seite die aktuelle.  rechte Seite minus 1 für linke seite
@@ -378,6 +379,7 @@ console.log(filenames + "test");
             const linke_seite = human_aktuelleSeite - 1;
             $controll_leiste.find('.current_page').html(linke_seite + " und " + rechte_seite);
             $controll_leiste.find('.all_sites').html(seitenanzahl);
+            $controll_leiste.find(".pdf-book-slider").val(rechte_seite);
           }
 
         }
@@ -393,6 +395,7 @@ console.log(filenames + "test");
         $controll_leiste.find('.current_page').html(aktuelleSeite);
         $controll_leiste.find('.all_sites').html(seitenanzahl);
       }
+      $controll_leiste.find(".pdf-book-slider").val(aktuelleSeite);
 
 
     }
@@ -534,7 +537,7 @@ console.log(filenames + "test");
     //-----------------------------------------------------------------------------------------------------------------------------------
     //Anzahl der Seiten im Buch ausgeben
     const seitenanzahl = pageFlip_Instanz.getPageCount();
-    
+
     control_text = control_text.replace(/pdf_id/g, buch_id);
     const $controls = jQuery(control_text); // in jQuery-Objekt umwandeln
     const currentIndex = pageFlip_Instanz.getCurrentPageIndex();
@@ -599,7 +602,7 @@ console.log(filenames + "test");
     if (zoom_dblclick === false) {
       $container.attr('zoom-dblclick', 'false');
     }
-    else{
+    else {
       $container.attr('zoom-dblclick', 'true');
       $container.attr("data-dbl-zoomed", "false");
     }
@@ -609,13 +612,13 @@ console.log(filenames + "test");
       $controls.find('.bt-icon-fullscreen').addClass('pdf_control_none');
     }
 
-    if(sound === true){
+    if (sound === true) {
       $controls.find('.bt-icon-sound').addClass('sound_on');
       //sound enable or disable in intsanz
       PageFlipRegistry[buch_id.replace("#", "")].sound = true;
-      
+
     }
-    else{
+    else {
       PageFlipRegistry[buch_id.replace("#", "")].sound = false;
     }
 
@@ -702,8 +705,8 @@ console.log(filenames + "test");
       const flipSound = new Audio(mp3_path);
       update_reflaction(pageFlip_Instanz, $buch);
       update_pagenumber(pageFlip_Instanz, $buch);
-      
-      if(PageFlipRegistry[buch_id.replace("#","")].sound == true && userInteracted == true){
+
+      if (PageFlipRegistry[buch_id.replace("#", "")].sound == true && userInteracted == true) {
         flipSound.currentTime = 0;
         flipSound.play();
       }
@@ -802,12 +805,12 @@ function init_panzoom_if_needed(buch_id) {
 
 function zoom_in_pdf(buch_id, new_zoom = false) {
   init_panzoom_if_needed(buch_id);
-  
+
   const panzoom = PageFlipRegistry[buch_id].panzoom;
   if (!panzoom) return;
 
   const current = panzoom.getScale();
-  if (new_zoom == false){
+  if (new_zoom == false) {
     next = Math.min(current + 0.1, 5);
   }
   else {
@@ -823,7 +826,7 @@ function zoom_out_pdf(buch_id) {
 
   const current = panzoom.getScale();
   const next = Math.max(current - 0.1, 0.2);
-  if (next <= 1){
+  if (next <= 1) {
     zoom_reset_pdf(buch_id);
     return;
   }
@@ -913,7 +916,7 @@ function fullscreen_pdf(id) {
       document.msExitFullscreen();
     }
 
-    zoom_reset_pdf(id.replace("#",""));
+    zoom_reset_pdf(id.replace("#", ""));
 
 
     // Attribut setzen
@@ -938,10 +941,10 @@ function fullscreen_pdf(id) {
 
   } else {
     // 👉 Enter Fullscreen
-    
-    zoom_in_pdf(id.replace("#",""),1.3);
+
+    zoom_in_pdf(id.replace("#", ""), 1.3);
     const element = $flipbook.closest(".pdf_book_fullscreen").get(0);
-   
+
 
     if (element.requestFullscreen) {
       element.requestFullscreen();
@@ -980,9 +983,9 @@ document.addEventListener("MSFullscreenChange", handleFullscreenChange);
 
 function handleFullscreenChange() {
   const isFullscreen = document.fullscreenElement ||
-                       document.webkitFullscreenElement ||
-                       document.mozFullScreenElement ||
-                       document.msFullscreenElement;
+    document.webkitFullscreenElement ||
+    document.mozFullScreenElement ||
+    document.msFullscreenElement;
   if (!isFullscreen) {
     jQuery(".pdf_book_fullscreen").each(function () {
       const $container = jQuery(this);
@@ -995,7 +998,7 @@ function handleFullscreenChange() {
       // Update attribute & classes
       $flipbook.attr("data-fullscreen-aktiv", "false");
       $flipbook.removeClass("fullscreen-enabled").addClass("fullscreen-disabled");
-      $flipbook.addClass("fullscreen-disabled"); 
+      $flipbook.addClass("fullscreen-disabled");
 
       updateFullscreenButton($controls, false);
       if (typeof reflect_display_show === "function") {
@@ -1003,7 +1006,7 @@ function handleFullscreenChange() {
       }
 
       $container.after($controls);
-      zoom_reset_pdf(id.replace("#",""));
+      zoom_reset_pdf(id.replace("#", ""));
     });
   }
 }
@@ -1031,30 +1034,30 @@ function reflect_display_show(id) {
   });
 }
 
-function move_pdf(id){
-	if (jQuery(id).hasClass("move_over") == true){
-		reflect_display_show(id);
-		jQuery(id).draggable({disabled: true});
-		jQuery(id).removeClass("move_over");
-		jQuery(id).parent().parent().parent().find(".move").removeClass("move_bt_active");
-	}
-	else{
-		jQuery(id).draggable({disabled: false});
-		reflect_display_hide(id);
-		jQuery(id).addClass("move_over");
-		jQuery(id).parent().parent().parent().find(".move").addClass("move_bt_active");
-	}
+function move_pdf(id) {
+  if (jQuery(id).hasClass("move_over") == true) {
+    reflect_display_show(id);
+    jQuery(id).draggable({ disabled: true });
+    jQuery(id).removeClass("move_over");
+    jQuery(id).parent().parent().parent().find(".move").removeClass("move_bt_active");
+  }
+  else {
+    jQuery(id).draggable({ disabled: false });
+    reflect_display_hide(id);
+    jQuery(id).addClass("move_over");
+    jQuery(id).parent().parent().parent().find(".move").addClass("move_bt_active");
+  }
 }
 
-function move_back(id){
-		// Reset position
-		var pdf_left = jQuery(id).attr("data-original-left");
-		var pdf_top = jQuery(id).attr("data-original-top");
-		
-		jQuery(id).css("left", pdf_left);
-		jQuery(id).css("top", pdf_top);
+function move_back(id) {
+  // Reset position
+  var pdf_left = jQuery(id).attr("data-original-left");
+  var pdf_top = jQuery(id).attr("data-original-top");
 
-}	
+  jQuery(id).css("left", pdf_left);
+  jQuery(id).css("top", pdf_top);
+
+}
 
 
 
@@ -1182,7 +1185,7 @@ jQuery(document).ready(function () {
 
   //sound
   jQuery(document).on("click", ".bt-options .bt-icon-sound", function () {
-      const $icon = jQuery(this);
+    const $icon = jQuery(this);
 
     // Wechsle Klassen
     const isOn = $icon.hasClass("sound_on");
@@ -1245,60 +1248,60 @@ jQuery(document).ready(function () {
   }, { passive: false }); // **WICHTIG**
 
   jQuery('.ui-flipbook').on('dblclick', function (e) {
-  
+
     const $flipbook = jQuery(this);
     const id = $flipbook.attr("id");
-    
+
     init_panzoom_if_needed(id);
-  
+
     if (!id || !PageFlipRegistry[id] || !PageFlipRegistry[id].panzoom) {
       console.warn("⚠️ Kein Panzoom-Instance gefunden für:", id);
       return;
     }
-  
+
     const elem = $flipbook.get(0);
     console.log(id);
-const rect = elem.getBoundingClientRect();
-let offsetX = e.clientX - rect.left;
-let offsetY = e.clientY - rect.top;
+    const rect = elem.getBoundingClientRect();
+    let offsetX = e.clientX - rect.left;
+    let offsetY = e.clientY - rect.top;
 
 
-const panzoomInstance = PageFlipRegistry[id].panzoom;
-if (!panzoomInstance) return;
+    const panzoomInstance = PageFlipRegistry[id].panzoom;
+    if (!panzoomInstance) return;
 
-console.log("Aktuelle Zoom-Stufe:", panzoomInstance.getScale());
-const isZoomed = $flipbook.attr("data-dbl-zoomed");
+    console.log("Aktuelle Zoom-Stufe:", panzoomInstance.getScale());
+    const isZoomed = $flipbook.attr("data-dbl-zoomed");
 
-if (isZoomed === "true") {
-  zoom_reset_pdf(id.replace("#", ""));
-  $flipbook.attr("data-dbl-zoomed", "false");
-} else {
+    if (isZoomed === "true") {
+      zoom_reset_pdf(id.replace("#", ""));
+      $flipbook.attr("data-dbl-zoomed", "false");
+    } else {
 
-  const panzoomElem = PageFlipRegistry[id].panzoom.getElem?.() || this;
-  const rect = panzoomElem.getBoundingClientRect();
-  const offsetX = e.clientX - rect.left;
-  const offsetY = e.clientY - rect.top;
+      const panzoomElem = PageFlipRegistry[id].panzoom.getElem?.() || this;
+      const rect = panzoomElem.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      const offsetY = e.clientY - rect.top;
 
-  const scale = 1.5;
-  const panzoomInstance = PageFlipRegistry[id].panzoom;
- 
-  const panX = (rect.width / 2 - offsetX) * (scale - 1);
-  const panY = (rect.height / 2 - offsetY) * (scale - 1);
-  
-  panzoomInstance.reset({ animate: false });
-  
-  setTimeout(() => {
-    panzoomInstance.zoom(scale, { animate: false }); // keine Animation dazwischen
-  
-    // Danach korrekt pannen
-    panzoomInstance.pan(panX, panY, { animate: true });
-  
-    console.log("✅ Zoom + Pan abgeschlossen:", { panX, panY });
-  }, 20);
-    $flipbook.attr("data-dbl-zoomed", "true");
+      const scale = 1.5;
+      const panzoomInstance = PageFlipRegistry[id].panzoom;
 
-}
-});
+      const panX = (rect.width / 2 - offsetX) * (scale - 1);
+      const panY = (rect.height / 2 - offsetY) * (scale - 1);
+
+      panzoomInstance.reset({ animate: false });
+
+      setTimeout(() => {
+        panzoomInstance.zoom(scale, { animate: false }); // keine Animation dazwischen
+
+        // Danach korrekt pannen
+        panzoomInstance.pan(panX, panY, { animate: true });
+
+        console.log("✅ Zoom + Pan abgeschlossen:", { panX, panY });
+      }, 20);
+      $flipbook.attr("data-dbl-zoomed", "true");
+
+    }
+  });
 
 
 }); //document.ready(function) ende
