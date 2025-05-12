@@ -266,7 +266,7 @@
 
             <field name="load_jqueryui" type="radio" default="1"
                    label="jQuery UI laden?"
-                   description="Soll jQuery UI vom Plugin geladen werden?">
+                   description="Soll jQuery UI Draggable vom Plugin geladen werden?">
                 <option value="1">Ja</option>
                 <option value="0">Nein</option>
             </field>

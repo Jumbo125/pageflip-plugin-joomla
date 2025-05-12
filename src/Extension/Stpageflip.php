@@ -144,7 +144,7 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
         }
 
         if ($this->params->get('load_jqueryui', 1)) {
-            $doc->addScript($base . 'jquery-ui.min.js', ['version' => 'auto'], ['defer' => true]);
+            $doc->addScript($base . 'jquery_ui_draggable.min.js', ['version' => 'auto'], ['defer' => true]);
         }
 
         $doc->addScript($base . 'panzoom.min.js', ['version' => 'auto'], ['defer' => true]);
