@@ -221,7 +221,6 @@ function controlls_for_book(ID, data_height, data_width, aspect_ratio, din_forma
   const filenames = $img_files.val().split(',');
   const img_files_dir = $img_files.data('img-path');
 
-  console.log(filenames + "test");
 
   if (Array.isArray(filenames)) {
     for (let i = 0; i < filenames.length; i++) {
@@ -1251,6 +1250,7 @@ jQuery(document).ready(function () {
 
     const $flipbook = jQuery(this);
     const id = $flipbook.attr("id");
+    alert($flipbook.attr("zoom-dblclick"));
 
     init_panzoom_if_needed(id);
 

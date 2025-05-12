@@ -15,7 +15,7 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
     {
         $string = html_entity_decode($string, ENT_QUOTES);
         $attrs = [];
-        preg_match_all('/(\w+)\s*=\s*"([^"]*)"/', $string, $matches, PREG_SET_ORDER);
+        preg_match_all('/([\w\-]+)\s*=\s*"([^"]*)"/', $string, $matches, PREG_SET_ORDER);
         foreach ($matches as $m) {
             $attrs[$m[1]] = $m[2];
         }

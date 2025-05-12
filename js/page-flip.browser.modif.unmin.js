@@ -59,8 +59,8 @@
                 s = e.pageWidth,
                 n = e.height,
                 h = 1 === t ? e.left + e.pageWidth : e.left,
-                r = e.top;
-            this.isLoad ? i.drawImage(this.image, h, r, s, n) : this.drawLoader(i, { x: h, y: r }, s, n);
+                o = e.top;
+            this.isLoad ? i.drawImage(this.image, h, o, s, n) : this.drawLoader(i, { x: h, y: o }, s, n);
         }
         drawLoader(t, e, i, s) {
             t.beginPath(), (t.strokeStyle = "rgb(200, 200, 200)"), (t.fillStyle = "rgb(255, 255, 255)"), (t.lineWidth = 1), t.rect(e.x + 1, e.y + 1, i - 1, s - 1), t.stroke(), t.fill();
@@ -106,34 +106,17 @@
             (this.landscapeSpread = []), (this.portraitSpread = []);
             for (let t = 0; t < this.pages.length; t++) this.portraitSpread.push([t]);
             let t = 0;
-            //this.isShowCover && (this.pages[0].setDensity("hard"), this.landscapeSpread.push([t]), t++);
             if (this.isShowCover) {
-                const firstPage = this.pages[0];
-                if (firstPage.getDensity() !== "soft") {
-                    firstPage.setDensity("hard");
-                }
-                this.landscapeSpread.push([t]);
-                t++;
+                const e = this.pages[0];
+                "soft" !== e.getDensity() && e.setDensity("hard"), this.landscapeSpread.push([t]), t++;
             }
-            for (let e = t; e < this.pages.length; e += 2) {
-                if (e < this.pages.length - 1) {
-                    this.landscapeSpread.push([e, e + 1]);
-                } else {
+            for (let e = t; e < this.pages.length; e += 2)
+                if (e < this.pages.length - 1) this.landscapeSpread.push([e, e + 1]);
+                else {
                     this.landscapeSpread.push([e]);
-            
-                    const lastPage = this.pages[e];
-                    const density =
-                        typeof lastPage.getDensity === "function"
-                            ? lastPage.getDensity()
-                            : (lastPage.props?.density || "soft");
-            
-                    if (density !== "soft") {
-                        lastPage.setDensity("hard");
-                    } else {
-                        lastPage.setDensity("soft"); // falls vorher hart gesetzt wurde
-                    }
+                    const t = this.pages[e];
+                    "soft" !== ("function" == typeof t.getDensity ? t.getDensity() : t.props?.density || "soft") ? t.setDensity("hard") : t.setDensity("soft");
                 }
-            }
         }
         getSpread() {
             return "landscape" === this.render.getOrientation() ? this.landscapeSpread : this.portraitSpread;
@@ -245,12 +228,12 @@
             if (h.GetDistanceBetweenTwoPoint(t, i) <= e) return i;
             const s = t.x,
                 n = t.y,
-                r = i.x,
-                o = i.y;
-            let a = Math.sqrt((Math.pow(e, 2) * Math.pow(s - r, 2)) / (Math.pow(s - r, 2) + Math.pow(n - o, 2))) + s;
+                o = i.x,
+                r = i.y;
+            let a = Math.sqrt((Math.pow(e, 2) * Math.pow(s - o, 2)) / (Math.pow(s - o, 2) + Math.pow(n - r, 2))) + s;
             i.x < 0 && (a *= -1);
-            let g = ((a - s) * (n - o)) / (s - r) + n;
-            return s - r + n === 0 && (g = e), { x: a, y: g };
+            let g = ((a - s) * (n - r)) / (s - o) + n;
+            return s - o + n === 0 && (g = e), { x: a, y: g };
         }
         static GetIntersectBetweenTwoSegment(t, e, i) {
             return h.PointInRect(t, h.GetIntersectBeetwenTwoLine(e, i));
@@ -260,12 +243,12 @@
                 s = e[0].y - e[1].y,
                 n = t[1].x - t[0].x,
                 h = e[1].x - e[0].x,
-                r = t[0].x * t[1].y - t[1].x * t[0].y,
-                o = e[0].x * e[1].y - e[1].x * e[0].y,
-                a = i * o - s * r,
-                g = n * o - h * r,
-                l = -(r * h - o * n) / (i * h - s * n),
-                d = -(i * o - s * r) / (i * h - s * n);
+                o = t[0].x * t[1].y - t[1].x * t[0].y,
+                r = e[0].x * e[1].y - e[1].x * e[0].y,
+                a = i * r - s * o,
+                g = n * r - h * o,
+                l = -(o * h - r * n) / (i * h - s * n),
+                d = -(i * r - s * o) / (i * h - s * n);
             if (isFinite(l) && isFinite(d)) return { x: l, y: d };
             if (Math.abs(a - g) < 0.1) throw new Error("Segment included");
             return null;
@@ -275,14 +258,14 @@
                 s = Math.abs(t.y - e.y),
                 n = Math.max(i, s),
                 h = [t];
-            function r(t, e, i, s, n) {
+            function o(t, e, i, s, n) {
                 return e > t ? t + n * (i / s) : e < t ? t - n * (i / s) : t;
             }
-            for (let o = 1; o <= n; o += 1) h.push({ x: r(t.x, e.x, i, n, o), y: r(t.y, e.y, s, n, o) });
+            for (let r = 1; r <= n; r += 1) h.push({ x: o(t.x, e.x, i, n, r), y: o(t.y, e.y, s, n, r) });
             return h;
         }
     }
-    class r extends e {
+    class o extends e {
         constructor(t, e, i) {
             super(t, i), (this.copiedElement = null), (this.temporaryCopy = null), (this.isLoad = !1), (this.element = e), this.element.classList.add("stf__item"), this.element.classList.add("--" + i);
         }
@@ -290,7 +273,7 @@
             return "hard" === this.nowDrawingDensity
                 ? this
                 : (null === this.temporaryCopy &&
-                      ((this.copiedElement = this.element.cloneNode(!0)), this.element.parentElement.appendChild(this.copiedElement), (this.temporaryCopy = new r(this.render, this.copiedElement, this.nowDrawingDensity))),
+                      ((this.copiedElement = this.element.cloneNode(!0)), this.element.parentElement.appendChild(this.copiedElement), (this.temporaryCopy = new o(this.render, this.copiedElement, this.nowDrawingDensity))),
                   this.getTemporaryCopy());
         }
         getTemporaryCopy() {
@@ -357,13 +340,13 @@
             this.element.classList.remove("--soft", "--hard"), this.element.classList.add("--" + t), super.setDrawingDensity(t);
         }
     }
-    class o extends s {
+    class r extends s {
         constructor(t, e, i, s) {
             super(t, e), (this.element = i), (this.pagesElement = s);
         }
         load() {
             for (const t of this.pagesElement) {
-                const e = new r(this.render, t, "hard" === t.dataset.density ? "hard" : "soft");
+                const e = new o(this.render, t, "hard" === t.dataset.density ? "hard" : "soft");
                 e.load(), this.pages.push(e);
             }
             this.createSpread();
@@ -544,11 +527,11 @@
             let s = t;
             const n = h.LimitPointToCircle(e, this.pageWidth, s);
             s !== n && ((s = n), this.updateAngleAndGeometry(s));
-            const r = Math.sqrt(Math.pow(this.pageWidth, 2) + Math.pow(this.pageHeight, 2));
-            let o = this.rect.bottomRight,
+            const o = Math.sqrt(Math.pow(this.pageWidth, 2) + Math.pow(this.pageHeight, 2));
+            let r = this.rect.bottomRight,
                 a = this.rect.topLeft;
-            if (("bottom" === this.corner && ((o = this.rect.topRight), (a = this.rect.bottomLeft)), o.x <= 0)) {
-                const t = h.LimitPointToCircle(i, r, a);
+            if (("bottom" === this.corner && ((r = this.rect.topRight), (a = this.rect.bottomLeft)), r.x <= 0)) {
+                const t = h.LimitPointToCircle(i, o, a);
                 t !== s && ((s = t), this.updateAngleAndGeometry(s));
             }
             return s;
@@ -634,37 +617,29 @@
             t.x <= 0 ? this.animateFlippingTo(t, { x: -e.pageWidth, y: i }, !0) : this.animateFlippingTo(t, { x: e.pageWidth, y: i }, !1);
         }
         showCorner(t) {
-            const global = this.render.convertToGlobal(t);
-            const el = document.elementFromPoint(global.x, global.y);
-
-            if (el) {
-                if (el.querySelector && el.querySelector('.move_over')) {
-                    //Falls move_over kein curl effekt
-                    console.log("Ecken-Effekt blockiert wegen .move_over");
-                    return;
-                }
-            }
-
+            const e = this.render.convertToGlobal(t),
+                i = document.elementFromPoint(e.x, e.y);
+            if (i && i.querySelector && i.querySelector(".move_over")) return void console.log("Ecken-Effekt blockiert wegen .move_over");
             if (!this.checkState("read", "fold_corner")) return;
-            const e = this.getBoundsRect(),
-                i = e.pageWidth;
+            const s = this.getBoundsRect(),
+                n = s.pageWidth;
             if (this.isPointOnCorners(t))
                 if (null === this.calc) {
                     if (!this.start(t)) return;
-                    this.setState("fold_corner"), this.calc.calc({ x: i - 1, y: 1 });
-                    const s = 50,
-                        n = "bottom" === this.calc.getCorner() ? e.height - 1 : 1,
-                        h = "bottom" === this.calc.getCorner() ? e.height - s : s;
-                    this.animateFlippingTo({ x: i - 1, y: n }, { x: i - s, y: h }, !1, !1);
+                    this.setState("fold_corner"), this.calc.calc({ x: n - 1, y: 1 });
+                    const e = 50,
+                        i = "bottom" === this.calc.getCorner() ? s.height - 1 : 1,
+                        h = "bottom" === this.calc.getCorner() ? s.height - e : e;
+                    this.animateFlippingTo({ x: n - 1, y: i }, { x: n - e, y: h }, !1, !1);
                 } else this.do(this.render.convertToPage(t));
             else this.setState("read"), this.render.finishAnimation(), this.stopMove();
         }
         animateFlippingTo(t, e, i, s = !0) {
             const n = h.GetCordsFromTwoPoint(t, e),
-                r = [];
-            for (const t of n) r.push(() => this.do(t));
-            const o = this.getAnimationDuration(n.length);
-            this.render.startAnimation(r, o, () => {
+                o = [];
+            for (const t of n) o.push(() => this.do(t));
+            const r = this.getAnimationDuration(n.length);
+            this.render.startAnimation(o, r, () => {
                 this.calc &&
                     (i && (1 === this.calc.getDirection() ? this.app.turnToPrevPage() : this.app.turnToNextPage()),
                     s && (this.render.setBottomPage(null), this.render.setFlippingPage(null), this.render.clearShadow(), this.setState("read"), this.reset()));
@@ -762,18 +737,18 @@
                 s = this.getBlockHeight() / 2,
                 n = this.setting.width / this.setting.height;
             let h = this.setting.width,
-                r = this.setting.height,
-                o = i - h;
+                o = this.setting.height,
+                r = i - h;
             return (
                 "stretch" === this.setting.size
                     ? (e < 2 * this.setting.minWidth && this.app.getSettings().usePortrait && (t = "portrait"),
                       (h = "portrait" === t ? this.getBlockWidth() : this.getBlockWidth() / 2),
                       h > this.setting.maxWidth && (h = this.setting.maxWidth),
-                      (r = h / n),
-                      r > this.getBlockHeight() && ((r = this.getBlockHeight()), (h = r * n)),
-                      (o = "portrait" === t ? i - h / 2 - h : i - h))
-                    : e < 2 * h && this.app.getSettings().usePortrait && ((t = "portrait"), (o = i - h / 2 - h)),
-                (this.boundsRect = { left: o, top: s - r / 2, width: 2 * h, height: r, pageWidth: h }),
+                      (o = h / n),
+                      o > this.getBlockHeight() && ((o = this.getBlockHeight()), (h = o * n)),
+                      (r = "portrait" === t ? i - h / 2 - h : i - h))
+                    : e < 2 * h && this.app.getSettings().usePortrait && ((t = "portrait"), (r = i - h / 2 - h)),
+                (this.boundsRect = { left: r, top: s - o / 2, width: 2 * h, height: o, pageWidth: h }),
                 t
             );
         }
@@ -938,21 +913,18 @@
                     this.update();
                 }),
                 (this.onMouseDown = (t) => {
-                    const target = t.target; 
-    
-                    //wenn zoom bei doppelcklick deaktiviert ist, wird umgeblättert, sonst wird umblättern unterdrückt
-                    if (target?.dataset?.zoomDblclick === "false") {
-                           //Flip deaktiverien wenn move_over
-                        if (target && target.closest('.move_over')) {
-                            console.log("Flip blockiert – .move_over");
-                            return;
-                        }
+                    console.log("MouseDown", t.clientX, t.clientY);
+                    const e = t.target;
+                   const flipbookEl = e.closest('.ui-flipbook');
+                   const zoomDblclick = flipbookEl?.dataset?.zoomDblclick;
+                  
+                   if (zoomDblclick == "false") {
+                        if (e && e.closest(".move_over")) return void console.log("Flip blockiert – .move_over");
                         if (this.checkTarget(t.target)) {
                             const e = this.getMousePos(t.clientX, t.clientY);
                             this.app.startUserTouch(e), t.preventDefault();
                         }
                     }
-                 
                 }),
                 (this.onTouchStart = (t) => {
                     if (this.checkTarget(t.target) && t.changedTouches.length > 0) {
@@ -1147,12 +1119,12 @@
                 i = 0 === this.getDirection() ? e : 0,
                 s = 0 === this.getDirection() ? "to left" : "to right",
                 n = this.convertToGlobal(this.shadow.pos),
-                r = this.shadow.angle + (3 * Math.PI) / 2,
-                o = [this.pageRect.topLeft, this.pageRect.topRight, this.pageRect.bottomRight, this.pageRect.bottomLeft];
+                o = this.shadow.angle + (3 * Math.PI) / 2,
+                r = [this.pageRect.topLeft, this.pageRect.topRight, this.pageRect.bottomRight, this.pageRect.bottomLeft];
             let a = "polygon( ";
-            for (const t of o) {
+            for (const t of r) {
                 let e = 1 === this.getDirection() ? { x: -t.x + this.shadow.pos.x, y: t.y - this.shadow.pos.y } : { x: t.x - this.shadow.pos.x, y: t.y - this.shadow.pos.y };
-                (e = h.GetRotatedPoint(e, { x: i, y: 100 }, r)), (a += e.x + "px " + e.y + "px, ");
+                (e = h.GetRotatedPoint(e, { x: i, y: 100 }, o)), (a += e.x + "px " + e.y + "px, ");
             }
             (a = a.slice(0, -2)), (a += ")");
             const g = `\n            display: block;\n            z-index: ${(this.getSettings().startZIndex + 10).toString(10)};\n            width: ${e}px;\n            height: ${
@@ -1161,7 +1133,7 @@
                 this.shadow.opacity
             }) 35%,\n                rgba(0, 0, 0, 0) 100%);\n            transform-origin: ${i}px 100px;\n            transform: translate3d(${n.x - i}px, ${
                 n.y - 100
-            }px, 0) rotate(${r}rad);\n            clip-path: ${a};\n            -webkit-clip-path: ${a};\n        `;
+            }px, 0) rotate(${o}rad);\n            clip-path: ${a};\n            -webkit-clip-path: ${a};\n        `;
             this.innerShadow.style.cssText = g;
         }
         drawOuterShadow() {
@@ -1170,24 +1142,24 @@
                 i = this.shadow.angle + (3 * Math.PI) / 2,
                 s = 1 === this.getDirection() ? this.shadow.width : 0,
                 n = 0 === this.getDirection() ? "to right" : "to left",
-                r = [
+                o = [
                     { x: 0, y: 0 },
                     { x: t.pageWidth, y: 0 },
                     { x: t.pageWidth, y: t.height },
                     { x: 0, y: t.height },
                 ];
-            let o = "polygon( ";
-            for (const t of r)
+            let r = "polygon( ";
+            for (const t of o)
                 if (null !== t) {
                     let e = 1 === this.getDirection() ? { x: -t.x + this.shadow.pos.x, y: t.y - this.shadow.pos.y } : { x: t.x - this.shadow.pos.x, y: t.y - this.shadow.pos.y };
-                    (e = h.GetRotatedPoint(e, { x: s, y: 100 }, i)), (o += e.x + "px " + e.y + "px, ");
+                    (e = h.GetRotatedPoint(e, { x: s, y: 100 }, i)), (r += e.x + "px " + e.y + "px, ");
                 }
-            (o = o.slice(0, -2)), (o += ")");
+            (r = r.slice(0, -2)), (r += ")");
             const a = `\n            display: block;\n            z-index: ${(this.getSettings().startZIndex + 10).toString(10)};\n            width: ${this.shadow.width}px;\n            height: ${
                 2 * t.height
             }px;\n            background: linear-gradient(${n}, rgba(0, 0, 0, ${this.shadow.opacity}), rgba(0, 0, 0, 0));\n            transform-origin: ${s}px 100px;\n            transform: translate3d(${e.x - s}px, ${
                 e.y - 100
-            }px, 0) rotate(${i}rad);\n            clip-path: ${o};\n            -webkit-clip-path: ${o};\n        `;
+            }px, 0) rotate(${i}rad);\n            clip-path: ${r};\n            -webkit-clip-path: ${r};\n        `;
             this.outerShadow.style.cssText = a;
         }
         drawLeftPage() {
@@ -1228,7 +1200,7 @@
             super.update(), null !== this.rightPage && this.rightPage.setOrientation(1), null !== this.leftPage && this.leftPage.setOrientation(0);
         }
     }
-    class x {
+    class m {
         constructor() {
             this._default = {
                 startPage: 0,
@@ -1277,142 +1249,143 @@
         }
     })(
         ".stf__parent {\n  position: relative;\n  display: block;\n  box-sizing: border-box;\n  transform: translateZ(0);\n\n  -ms-touch-action: pan-y;\n  touch-action: pan-y;\n}\n\n.sft__wrapper {\n  position: relative;\n  width: 100%;\n  box-sizing: border-box;\n}\n\n.stf__parent canvas {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  left: 0;\n  top: 0;\n}\n\n.stf__block {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  box-sizing: border-box;\n  perspective: 2000px;\n}\n\n.stf__item {\n  display: none;\n  position: absolute;\n  transform-style: preserve-3d;\n}\n\n.stf__outerShadow {\n  position: absolute;\n  left: 0;\n  top: 0;\n}\n\n.stf__innerShadow {\n  position: absolute;\n  left: 0;\n  top: 0;\n}\n\n.stf__hardShadow {\n  position: absolute;\n  left: 0;\n  top: 0;\n}\n\n.stf__hardInnerShadow {\n  position: absolute;\n  left: 0;\n  top: 0;\n}"
-    );
-    (t.PageFlip = class extends class {
-        constructor() {
-            this.events = new Map();
-        }
-        on(t, e) {
-            return this.events.has(t) ? this.events.get(t).push(e) : this.events.set(t, [e]), this;
-        }
-        off(t) {
-            this.events.delete(t);
-        }
-        trigger(t, e, i = null) {
-            if (this.events.has(t)) for (const s of this.events.get(t)) s({ data: i, object: e });
-        }
-    } {
-        constructor(t, e) {
-            super(), (this.isUserTouch = !1), (this.isUserMove = !1), (this.setting = null), (this.pages = null), (this.setting = new x().getSettings(e)), (this.block = t);
-        }
-        destroy() {
-            this.ui.destroy(), this.block.remove();
-        }
-        update() {
-            this.render.update(), this.pages.show();
-        }
-        loadFromImages(t) {
-            this.ui = new u(this.block, this, this.setting);
-            const e = this.ui.getCanvas();
-            (this.render = new d(this, this.setting, e)),
-                (this.flipController = new g(this.render, this)),
-                (this.pages = new n(this, this.render, t)),
-                this.pages.load(),
-                this.render.start(),
-                this.pages.show(this.setting.startPage),
-                setTimeout(() => {
-                    this.ui.update(), this.trigger("init", this, { page: this.setting.startPage, mode: this.render.getOrientation() });
-                }, 1);
-        }
-        loadFromHTML(t) {
-            (this.ui = new c(this.block, this, this.setting, t)),
-                (this.render = new w(this, this.setting, this.ui.getDistElement())),
-                (this.flipController = new g(this.render, this)),
-                (this.pages = new o(this, this.render, this.ui.getDistElement(), t)),
-                this.pages.load(),
-                this.render.start(),
-                this.pages.show(this.setting.startPage),
-                setTimeout(() => {
-                    this.ui.update(), this.trigger("init", this, { page: this.setting.startPage, mode: this.render.getOrientation() });
-                }, 1);
-        }
-        updateFromImages(t) {
-            const e = this.pages.getCurrentPageIndex();
-            this.pages.destroy(), (this.pages = new n(this, this.render, t)), this.pages.load(), this.pages.show(e), this.trigger("update", this, { page: e, mode: this.render.getOrientation() });
-        }
-        updateFromHtml(t) {
-            const e = this.pages.getCurrentPageIndex();
-            this.pages.destroy(),
-                (this.pages = new o(this, this.render, this.ui.getDistElement(), t)),
-                this.pages.load(),
-                this.ui.updateItems(t),
-                this.render.reload(),
-                this.pages.show(e),
-                this.trigger("update", this, { page: e, mode: this.render.getOrientation() });
-        }
-        clear() {
-            this.pages.destroy(), this.ui.clear();
-        }
-        turnToPrevPage() {
-            this.pages.showPrev();
-        }
-        turnToNextPage() {
-            this.pages.showNext();
-        }
-        turnToPage(t) {
-            this.pages.show(t);
-        }
-        flipNext(t = "top") {
-            this.flipController.flipNext(t);
-        }
-        flipPrev(t = "top") {
-            this.flipController.flipPrev(t);
-        }
-        flip(t, e = "top") {
-            this.flipController.flipToPage(t, e);
-        }
-        updateState(t) {
-            this.trigger("changeState", this, t);
-        }
-        updatePageIndex(t) {
-            this.trigger("flip", this, t);
-        }
-        updateOrientation(t) {
-            this.ui.setOrientationStyle(t), this.update(), this.trigger("changeOrientation", this, t);
-        }
-        getPageCount() {
-            return this.pages.getPageCount();
-        }
-        getCurrentPageIndex() {
-            return this.pages.getCurrentPageIndex();
-        }
-        getPage(t) {
-            return this.pages.getPage(t);
-        }
-        getRender() {
-            return this.render;
-        }
-        getFlipController() {
-            return this.flipController;
-        }
-        getOrientation() {
-            return this.render.getOrientation();
-        }
-        getBoundsRect() {
-            return this.render.getRect();
-        }
-        getSettings() {
-            return this.setting;
-        }
-        getUI() {
-            return this.ui;
-        }
-        getState() {
-            return this.flipController.getState();
-        }
-        getPageCollection() {
-            return this.pages;
-        }
-        startUserTouch(t) {
-            (this.mousePosition = t), (this.isUserTouch = !0), (this.isUserMove = !1);
-            
-        }
-        userMove(t, e) {
-            this.isUserTouch || e || !this.setting.showPageCorners ? this.isUserTouch && h.GetDistanceBetweenTwoPoint(this.mousePosition, t) > 5 && ((this.isUserMove = !0), this.flipController.fold(t)) : this.flipController.showCorner(t);
-        }
-        userStop(t, e = !1) {
-            this.isUserTouch && ((this.isUserTouch = !1), e || (this.isUserMove ? this.flipController.stopMove() : this.flipController.flip(t)));
-        }
-    }),
+    ),
+        (t.PageFlip = class extends class {
+            constructor() {
+                this.events = new Map();
+            }
+            on(t, e) {
+                return this.events.has(t) ? this.events.get(t).push(e) : this.events.set(t, [e]), this;
+            }
+            off(t) {
+                this.events.delete(t);
+            }
+            trigger(t, e, i = null) {
+                if (this.events.has(t)) for (const s of this.events.get(t)) s({ data: i, object: e });
+            }
+        } {
+            constructor(t, e) {
+                super(), (this.isUserTouch = !1), (this.isUserMove = !1), (this.setting = null), (this.pages = null), (this.setting = new m().getSettings(e)), (this.block = t);
+            }
+            destroy() {
+                this.ui.destroy(), this.block.remove();
+            }
+            update() {
+                this.render.update(), this.pages.show();
+            }
+            loadFromImages(t) {
+                this.ui = new u(this.block, this, this.setting);
+                const e = this.ui.getCanvas();
+                (this.render = new d(this, this.setting, e)),
+                    (this.flipController = new g(this.render, this)),
+                    (this.pages = new n(this, this.render, t)),
+                    this.pages.load(),
+                    this.render.start(),
+                    this.pages.show(this.setting.startPage),
+                    setTimeout(() => {
+                        this.ui.update(), this.trigger("init", this, { page: this.setting.startPage, mode: this.render.getOrientation() });
+                    }, 1);
+            }
+            loadFromHTML(t) {
+                (this.ui = new c(this.block, this, this.setting, t)),
+                    (this.render = new w(this, this.setting, this.ui.getDistElement())),
+                    (this.flipController = new g(this.render, this)),
+                    (this.pages = new r(this, this.render, this.ui.getDistElement(), t)),
+                    this.pages.load(),
+                    this.render.start(),
+                    this.pages.show(this.setting.startPage),
+                    setTimeout(() => {
+                        this.ui.update(), this.trigger("init", this, { page: this.setting.startPage, mode: this.render.getOrientation() });
+                    }, 1);
+            }
+            updateFromImages(t) {
+                const e = this.pages.getCurrentPageIndex();
+                this.pages.destroy(), (this.pages = new n(this, this.render, t)), this.pages.load(), this.pages.show(e), this.trigger("update", this, { page: e, mode: this.render.getOrientation() });
+            }
+            updateFromHtml(t) {
+                const e = this.pages.getCurrentPageIndex();
+                this.pages.destroy(),
+                    (this.pages = new r(this, this.render, this.ui.getDistElement(), t)),
+                    this.pages.load(),
+                    this.ui.updateItems(t),
+                    this.render.reload(),
+                    this.pages.show(e),
+                    this.trigger("update", this, { page: e, mode: this.render.getOrientation() });
+            }
+            clear() {
+                this.pages.destroy(), this.ui.clear();
+            }
+            turnToPrevPage() {
+                this.pages.showPrev();
+            }
+            turnToNextPage() {
+                this.pages.showNext();
+            }
+            turnToPage(t) {
+                this.pages.show(t);
+            }
+            flipNext(t = "top") {
+                this.flipController.flipNext(t);
+            }
+            flipPrev(t = "top") {
+                this.flipController.flipPrev(t);
+            }
+            flip(t, e = "top") {
+                this.flipController.flipToPage(t, e);
+            }
+            updateState(t) {
+                this.trigger("changeState", this, t);
+            }
+            updatePageIndex(t) {
+                this.trigger("flip", this, t);
+            }
+            updateOrientation(t) {
+                this.ui.setOrientationStyle(t), this.update(), this.trigger("changeOrientation", this, t);
+            }
+            getPageCount() {
+                return this.pages.getPageCount();
+            }
+            getCurrentPageIndex() {
+                return this.pages.getCurrentPageIndex();
+            }
+            getPage(t) {
+                return this.pages.getPage(t);
+            }
+            getRender() {
+                return this.render;
+            }
+            getFlipController() {
+                return this.flipController;
+            }
+            getOrientation() {
+                return this.render.getOrientation();
+            }
+            getBoundsRect() {
+                return this.render.getRect();
+            }
+            getSettings() {
+                return this.setting;
+            }
+            getUI() {
+                return this.ui;
+            }
+            getState() {
+                return this.flipController.getState();
+            }
+            getPageCollection() {
+                return this.pages;
+            }
+            startUserTouch(t) {
+                (this.mousePosition = t), (this.isUserTouch = !0), (this.isUserMove = !1);
+            }
+            userMove(t, e) {
+                this.isUserTouch || e || !this.setting.showPageCorners
+                    ? this.isUserTouch && h.GetDistanceBetweenTwoPoint(this.mousePosition, t) > 5 && ((this.isUserMove = !0), this.flipController.fold(t))
+                    : this.flipController.showCorner(t);
+            }
+            userStop(t, e = !1) {
+                this.isUserTouch && ((this.isUserTouch = !1), e || (this.isUserMove ? this.flipController.stopMove() : this.flipController.flip(t)));
+            }
+        }),
         Object.defineProperty(t, "__esModule", { value: !0 });
 });
