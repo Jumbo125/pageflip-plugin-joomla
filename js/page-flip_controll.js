@@ -1250,7 +1250,6 @@ jQuery(document).ready(function () {
 
     const $flipbook = jQuery(this);
     const id = $flipbook.attr("id");
-    alert($flipbook.attr("zoom-dblclick"));
 
     init_panzoom_if_needed(id);
 
