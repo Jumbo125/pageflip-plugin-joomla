@@ -264,7 +264,11 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
                     
 
                 $inputHtml = '<input id="' . htmlspecialchars($bookId . '_img_files', ENT_QUOTES) . '" type="hidden" value="' . htmlspecialchars($fileList, ENT_QUOTES) . '"';
-        
+                
+                     if ($debug_mode == true){           
+                        $article->text .= "<p class='alert alert-info'>verstecktes input tag eingefügt, mit den werten type='hidden' value='" . htmlspecialchars($fileList, ENT_QUOTES) . "'</p>";
+                    }
+
                 if (!empty($pdfList)) {
                     $inputHtml .= ' data-pdf-src="' . htmlspecialchars($pdfList, ENT_QUOTES) . '"';
                     $inputHtml .= ' data-pdf-path="' . htmlspecialchars('/images/stpageflip/' . trim($attrs['pdf'], '/') , ENT_QUOTES) . '"';
