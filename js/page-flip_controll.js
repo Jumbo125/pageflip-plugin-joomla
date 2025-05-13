@@ -264,8 +264,8 @@ show_debug_msg("controlls_for_book wird für Buch #" + ID + "ausgeführt" );
   const filenames = $img_files.val().split(',');
   const img_files_dir = $img_files.data('img-path');
   show_debug_msg("input tag mit bilddaten: " + $img_files);
-  show_debug_msg("img daten: " + $filenames);
-  show_debug_msg("img pfad: " + $filenames);
+  show_debug_msg("img daten: " + filenames);
+  show_debug_msg("img pfad: " + img_files_dir);
 
 
   if (Array.isArray(filenames)) {
