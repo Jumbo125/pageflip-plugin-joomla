@@ -30,11 +30,24 @@ function show_debug_msg(text){
     }
 
     // panzoom prüfen
-   if (panzoom && typeof panzoom.getScale === 'function') {
-        show_debug_msg('✅ panzoom verfügbar');
-    } else {
-        show_debug_msg('❌ panzoom NICHT verfügbar');
+  if (typeof window.Panzoom === 'function') {
+    const testElem = document.createElement('div');
+    document.body.appendChild(testElem);
+
+    try {
+      const instance = Panzoom(testElem);
+
+      if (typeof instance.zoomIn === 'function') {
+        console.log('✅ Panzoom geladen, zoomIn() verfügbar.');
+      } else {
+        console.warn('⚠️ Panzoom vorhanden, aber zoomIn() nicht verfügbar.');
+      }
+    } catch (e) {
+      console.error('❌ Fehler beim Initialisieren von Panzoom:', e);
     }
+  } else {
+    console.error('❌ Panzoom ist nicht verfügbar (window.Panzoom fehlt).');
+  }
 
 
 //------------------------
