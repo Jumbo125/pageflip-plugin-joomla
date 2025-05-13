@@ -30,7 +30,7 @@ function show_debug_msg(text){
     }
 
     // panzoom prüfen
-    if (typeof panzoom === 'function') {
+   if (panzoom && typeof panzoom.getScale === 'function') {
         show_debug_msg('✅ panzoom verfügbar');
     } else {
         show_debug_msg('❌ panzoom NICHT verfügbar');
