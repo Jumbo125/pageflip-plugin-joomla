@@ -167,7 +167,7 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
             $attrs = $this->parseAttributes($match[1]);
         
             $bookId = isset($attrs['id']) && $attrs['id'] !== '' ? $attrs['id'] : uniqid('book_');
-            $imgFolder = JUri::base()   '/images/stpageflip/' . trim($attrs['img'] ?? '', '/');
+            $imgFolder = JUri::base() .  'images/stpageflip/' . trim($attrs['img'] ?? '', '/');
             $pdfFolder = JUri::base()  . 'images/stpageflip/' . trim($attrs['pdf'] ?? '', '/');
         
             $imageFiles = [];
