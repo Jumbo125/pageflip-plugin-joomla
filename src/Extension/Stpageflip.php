@@ -82,6 +82,11 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
     public function handleBookShortcodes(Event $event)
     {
         //Factory::getApplication()->enqueueMessage('onContentPrepare läuft');
+        // Prüfen, ob Debug-Modus aktiviert ist
+            $debug = $this->params->get('debug_mode', 0) == 1;
+
+            // Debug-Hidden-Input vorbereiten
+            $debugInput = '<input type="hidden" id="stpageflip_debug" value="' . ($debug ? 'true' : 'false') . '">';
 
         if (count($event->getArguments()) < 4) {
             return;

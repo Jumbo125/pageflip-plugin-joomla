@@ -255,7 +255,7 @@
             name="info_note"
             type="spacer"
             label="Hinweis"
-            description="Legen Sie Ihre Bilder in /images/stpageflip/ ab. Im Shortcode verwenden Sie dann.">
+            description="Legen Sie Ihre Bilder in /images/stpageflip/ ab. Im Shortcode verwenden Sie dann. Wenn kein jQuery und kein Bootsrpan eingebunden ist, bitte folgende script mit Ja einbinden">
         </field>
             <field name="load_jquery" type="radio" default="0"
                    label="jQuery laden?"
@@ -284,6 +284,13 @@
                 <option value="1">Ja</option>
                 <option value="0">Nein</option>
             </field>
+
+            <field name="debug_mode" type="radio" default="0"
+                label="Debug-Modus aktivieren?"
+                description="Soll der Debug-Modus des Plugins aktiviert werden?">
+              <option value="1">Ja</option>
+              <option value="0">Nein</option>
+          </field>
 
         </fieldset>
     </fields>

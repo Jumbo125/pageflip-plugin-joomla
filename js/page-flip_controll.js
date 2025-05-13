@@ -1,8 +1,52 @@
+//Debug modus
+const debugValue = document.getElementById('stpageflip_debug')?.value;
+
+if (debugValue === 'true') {
+    console.log('Debug-Modus ist aktiviert');
+} else {
+    console.log('Debug-Modus ist deaktiviert');
+}
+
+function show_debug_msg(text){
+  if (debugValue === "true"){
+    console.log(text);
+  }
+}
+//-----------------------------------------------------------------------------------------
+
+//check if panzoom ferfügbar ist, stpageflip und jquery
+// jQuery prüfen
+    if (typeof jQuery === 'function') {
+        show_debug_msg('✅ jQuery geladen');
+    } else {
+        show_debug_msg('❌ jQuery konnte nicht geladen werden');
+    }
+
+    // St.PageFlip prüfen
+    if (typeof St !== 'undefined' && typeof St.PageFlip === 'function') {
+        show_debug_msg('✅ St.PageFlip verfügbar');
+    } else {
+        show_debug_msg('❌ St.PageFlip NICHT verfügbar');
+    }
+
+    // panzoom prüfen
+    if (typeof panzoom === 'function') {
+        show_debug_msg('✅ panzoom verfügbar');
+    } else {
+        show_debug_msg('❌ panzoom NICHT verfügbar');
+    }
+
+
+//------------------------
 jQuery(document).ready(function () {
   jQuery("body").find(".flip-book").each(function () {
     const id = jQuery(this).attr('id');
     if (id) {
+      show_debug_msg("Buch mit der ID #" + id + " gefunden");
       controlls_for_book('#' + id);
+    }
+    else{
+      show_debug_msg("kein buch gefunden");
     }
   });
 });
@@ -37,25 +81,11 @@ const getAttrValue = ($container, key, fallback) => {
   return val !== undefined && val !== "" ? val : fallback;
 };
 
-function getRelativePhpPath(scriptName, phpSubPath) {
-  const currentScript = document.currentScript || document.querySelector(`script[src*="${scriptName}"]`);
-  if (!currentScript) {
-    console.error(`Script "${scriptName}" nicht gefunden.`);
-    return null;
-  }
-
-  let jsPath = currentScript.getAttribute('src');
-  jsPath = jsPath.substring(0, jsPath.lastIndexOf('/js/')); // Gehe auf Basisverzeichnis zurück
-
-  const fullPhpPath = jsPath + '/' + phpSubPath;
-  return fullPhpPath;
-}
-
 
 
 function controlls_for_book(ID, data_height, data_width, aspect_ratio, din_format, single_center, mousewheel_scroll, density, slider, bt_options, home, download, prev, next, zoom_in, zoom_out, zoom_default, zoom_dblclick, fullscreen, reflection, tooltip, sound, transform, inside_button, color, color_hover) {
 
-
+show_debug_msg("controlls_for_book wird für Buch #" + ID + "ausgeführt" );
 
   // Arrays und variablen deklarieren###############################################
   // controlls Text bzw. wie und welche Symbole angezeigt werden ###############
@@ -255,7 +285,7 @@ function controlls_for_book(ID, data_height, data_width, aspect_ratio, din_forma
     }
   }
   else {
-    console.error('Antwort ist kein Array:', response);
+    show_debug_msg('Antwort ist kein Array:', response);
   }
 
 
@@ -274,10 +304,16 @@ function controlls_for_book(ID, data_height, data_width, aspect_ratio, din_forma
         useMouseEvents: true
       }
     );
-    pageFlip.loadFromHTML(document.querySelectorAll(`${buch_id} .page`));
-
+    
+    if (pages.length > 0) {
+      pageFlip.loadFromHTML(pages);
+      show_debug_msg(`✅ ${pages.length} Seite(n) in PageFlip geladen für "${buch_id_without_idselector}".`);
+    } else {
+      show_debug_msg(`❌ Keine Seiten gefunden für "${buch_id}" – PageFlip kann nicht initialisiert werden.`);
+    }
 
     $turn_js_container.data('has-turn', true);
+    
     PageFlipRegistry[buch_id_without_idselector] = {
       instance: pageFlip,
       $element: jQuery(buch_id),
@@ -285,7 +321,15 @@ function controlls_for_book(ID, data_height, data_width, aspect_ratio, din_forma
       panzoom: null, // kommt später rein
       sound: null //kommt später rein, falls sound true ist 
     };
-
+    // Nach dem Eintrag prüfen, ob wirklich gespeichert wurde
+    if (
+      PageFlipRegistry.hasOwnProperty(buch_id_without_idselector) &&
+      PageFlipRegistry[buch_id_without_idselector]?.instance === pageFlip
+    ) {
+      show_debug_msg(`✅ PageFlip-Instanz für "${buch_id_without_idselector}" in Registry gespeichert.`);
+    } else {
+      show_debug_msg(`❌ Fehler: PageFlip-Instanz konnte NICHT in Registry gespeichert werden für "${buch_id_without_idselector}".`);
+    }
     //aktuelle position speichern um nach vreschie manöver zurückzusetzetn
 
     jQuery(buch_id).attr("data-original-left", jQuery(buch_id).css('left'));
@@ -344,12 +388,15 @@ function controlls_for_book(ID, data_height, data_width, aspect_ratio, din_forma
 
       //passenden slider suchen
       jQuery(".slider").each(function () {
-        console.log(jQuery(this).attr("data-book-id"));
+       show_debug_msg("Slider gefunden und zugeordnert: " + jQuery(this).attr("data-book-id"));
         if (jQuery(this).attr("data-book-id") == "#" + $buch.attr("id")) {
           $controll_leiste = jQuery(this).parent();
 
         }
       });
+      if (jQuery(".slider").length <= 0 ){
+        show_debug_msg("kein Slider gefunden");
+      }
 
       if ($pageFlip_wrapper.hasClass("--portrait")) {
         portrait = true;
@@ -421,9 +468,9 @@ function controlls_for_book(ID, data_height, data_width, aspect_ratio, din_forma
 
       //controlleiste initialisieren
       jQuery(".slider").each(function () {
-        console.log(jQuery(this).attr("data-book-id"));
         if (jQuery(this).attr("data-book-id") == "#" + $buchelement.attr("id")) {
           $controll_leiste = jQuery(this).parent();
+          show_debug_msg(" Controllleiste gefunden");
         }
       });
 
@@ -1254,12 +1301,12 @@ jQuery(document).ready(function () {
     init_panzoom_if_needed(id);
 
     if (!id || !PageFlipRegistry[id] || !PageFlipRegistry[id].panzoom) {
-      console.warn("⚠️ Kein Panzoom-Instance gefunden für:", id);
+        show_debug_msg("⚠️ Kein Panzoom-Instance gefunden für:", id);
       return;
     }
 
     const elem = $flipbook.get(0);
-    console.log(id);
+    show_debug_msg("Flipbook-id: " + id);
     const rect = elem.getBoundingClientRect();
     let offsetX = e.clientX - rect.left;
     let offsetY = e.clientY - rect.top;
@@ -1268,7 +1315,7 @@ jQuery(document).ready(function () {
     const panzoomInstance = PageFlipRegistry[id].panzoom;
     if (!panzoomInstance) return;
 
-    console.log("Aktuelle Zoom-Stufe:", panzoomInstance.getScale());
+    show_debug_msg("Aktuelle Zoom-Stufe:", panzoomInstance.getScale());
     const isZoomed = $flipbook.attr("data-dbl-zoomed");
 
     if (isZoomed === "true") {
@@ -1295,7 +1342,7 @@ jQuery(document).ready(function () {
         // Danach korrekt pannen
         panzoomInstance.pan(panX, panY, { animate: true });
 
-        console.log("✅ Zoom + Pan abgeschlossen:", { panX, panY });
+        show_debug_msg("✅ Zoom + Pan abgeschlossen:", { panX, panY });
       }, 20);
       $flipbook.attr("data-dbl-zoomed", "true");
 
