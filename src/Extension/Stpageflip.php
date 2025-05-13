@@ -167,8 +167,8 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
             $attrs = $this->parseAttributes($match[1]);
         
             $bookId = isset($attrs['id']) && $attrs['id'] !== '' ? $attrs['id'] : uniqid('book_');
-            $imgFolder = JUri::base() .  'images/stpageflip/' . trim($attrs['img'] ?? '', '/');
-            $pdfFolder = JUri::base()  . 'images/stpageflip/' . trim($attrs['pdf'] ?? '', '/');
+            $imgFolder =  JPATH_ROOT . '/images/stpageflip/' . trim($attrs['img'] ?? '', '/');
+            $pdfFolder = JPATH_ROOT . '/images/stpageflip/' . trim($attrs['pdf'] ?? '', '/');
         
             $imageFiles = [];
             $pdfFiles = [];
@@ -180,6 +180,9 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
                         $imageFiles[] = $file;
                     }
                 }
+            }
+            else{
+                Factory::getApplication()->enqueueMessage('Img Ordner nicht gefunden');
             }
         
             if (is_dir($pdfFolder)) {
@@ -200,11 +203,11 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
         
                 if (!empty($pdfList)) {
                     $inputHtml .= ' data-pdf-src="' . htmlspecialchars($pdfList, ENT_QUOTES) . '"';
-                    $inputHtml .= ' data-pdf-path="' . htmlspecialchars(Uri::root() . 'images/stpageflip/' . trim($attrs['pdf'], '/') . '/', ENT_QUOTES) . '"';
+                    $inputHtml .= ' data-pdf-path="' . htmlspecialchars('/images/stpageflip/' . trim($attrs['pdf'], '/') , ENT_QUOTES) . '"';
                 }
         
                 if (!empty($fileList)) {
-                    $inputHtml .= ' data-img-path="' . htmlspecialchars(Uri::root() . 'images/stpageflip/' . trim($attrs['img'], '/') . '/', ENT_QUOTES) . '"';
+                    $inputHtml .= ' data-img-path="' . htmlspecialchars('/images/stpageflip/' . trim($attrs['img'], '/') , ENT_QUOTES) . '"';
                 }
         
                 $inputHtml .= '>';
