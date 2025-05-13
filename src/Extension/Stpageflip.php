@@ -83,14 +83,17 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
     {
         //Factory::getApplication()->enqueueMessage('onContentPrepare läuft');
         // Prüfen, ob Debug-Modus aktiviert ist
-            $debug = $this->params->get('debug_mode', 0) == 1;
-            // Debug-Hidden-Input vorbereiten
-            
+          
+        // Debug-Hidden-Input vorbereiten    
+      
+               
         if ($this->params->get('debug_mode', 0)) {
             $debugInput = '<input type="hidden" id="stpageflip_debug" value="true">';
+            $debug_mode = true; 
         }
         else{
             $debugInput = '<input type="hidden" id="stpageflip_debug" value="false">';  
+            $debug_mode = false;
         }
         if (count($event->getArguments()) < 4) {
             return;
@@ -145,18 +148,50 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
 
         if ($this->params->get('load_bootstrap', 0)) {
             $doc->addStyleSheet($cssBase . 'bootstrap.css');
+            if ($debug_mode == true){
+                $article->text .= "<p class='alert alert-info'>bootstrap.css eingebunden</p>";
+            }
+        }
+        else{
+              if ($debug_mode == true){
+                $article->text .= "<p class='alert alert-danger'>bootstrap.css NICHT eingebunden</p>";
+              }
         }
 
         if ($this->params->get('load_bootstrap_icons', 1)) {
             $doc->addStyleSheet($cssBase . 'bootstrap_ico/bootstrap-icons.css');
+             if ($debug_mode == true){
+                $article->text .= "<p class='alert alert-info'>bootstrap-icons.css eingebunden</p>";
+            }
+          }
+        else{
+              if ($debug_mode == true){
+                $article->text .= "<p class='alert alert-danger'>bootstrap-icons.css NICHT eingebunden</p>";
+              }
         }
 
         if ($this->params->get('load_jquery', 0)) {
             $doc->addScript($base . 'jquery.js', ['version' => 'auto'], ['defer' => true]);
+             if ($debug_mode == true){
+                $article->text .= "<p class='alert alert-info'>jquery.js eingebunden</p>";
+            }
+        }
+        else{
+              if ($debug_mode == true){
+                $article->text .= "<p class='alert alert-danger'>jquery.js NICHT eingebunden</p>";
+              }
         }
 
         if ($this->params->get('load_jqueryui', 1)) {
             $doc->addScript($base . 'jquery_ui_draggable.min.js', ['version' => 'auto'], ['defer' => true]);
+               if ($debug_mode == true){
+                    $article->text .= "<p class='alert alert-info'>jquery_ui_draggable.min.js eingebunden</p>";
+                }
+        }
+        else{
+              if ($debug_mode == true){
+                $article->text .= "<p class='alert alert-danger'>jquery_ui_draggable.min.js NICHT eingebunden</p>";
+              }
         }
 
         $doc->addScript($base . 'panzoom.min.js', ['version' => 'auto'], ['defer' => true]);
@@ -172,7 +207,16 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
         
             $bookId = isset($attrs['id']) && $attrs['id'] !== '' ? $attrs['id'] : uniqid('book_');
             $imgFolder =  JPATH_ROOT . '/images/stpageflip/' . trim($attrs['img'] ?? '', '/');
-            $pdfFolder = JPATH_ROOT . '/images/stpageflip/' . trim($attrs['pdf'] ?? '', '/');
+
+            $pdffolderName = trim($attrs['pdf'] ?? '', '/'); 
+
+
+            if ($pdffolderName === '') {
+                $pdffolderName = trim($attrs['img'] ?? '', '/');
+            }
+         
+            $imgFolder =  JPATH_ROOT . '/images/stpageflip/' . trim($attrs['img'] ?? '', '/');
+            $pdfFolder = JPATH_ROOT . '/images/stpageflip/' . $pdffolderName;
         
             $imageFiles = [];
             $pdfFiles = [];
@@ -184,9 +228,15 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
                         $imageFiles[] = $file;
                     }
                 }
+                   if ($debug_mode == true){
+                         $article->text .= "<p class='alert alert-info'>IMG Ordner gefunden: " . $imgFolder . " </p>";
+                    }
             }
             else{
-                Factory::getApplication()->enqueueMessage('Img Ordner nicht gefunden');
+                //Factory::getApplication()->enqueueMessage('Img Ordner nicht gefunden');
+                 if ($debug_mode == true){
+                         $article->text .= "<p class='alert alert-danger'>IMG Ordner NICHT gefunden: " . $imgFolder . " </p>";
+                    }
             }
         
             if (is_dir($pdfFolder)) {
@@ -195,6 +245,14 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
                         $pdfFiles[] = $file;
                     }
                 }
+                   if ($debug_mode == true){
+                        $article->text .= "<p class='alert alert-info'>PDF Ordner gefunden: " . $pdfFolder . " </p>";
+                    }
+            }
+            else{
+                    if ($debug_mode == true){           
+                        $article->text .= "<p class='alert alert-danger'>PDF Ordner NICHT gefunden: " . $pdfFolder . ". Der Ordner muss in " .JPATH_ROOT . "/images/stpageflip/ liegen </p>";
+                    }
             }
         
             if (!empty($imageFiles) || !empty($pdfFiles)) {
@@ -202,16 +260,34 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
                 $pdfList = implode(',', $pdfFiles);
         
                 //Factory::getApplication()->enqueueMessage('create input: id="' . $bookId . '"');
-        
+                 
+                    
+
                 $inputHtml = '<input id="' . htmlspecialchars($bookId . '_img_files', ENT_QUOTES) . '" type="hidden" value="' . htmlspecialchars($fileList, ENT_QUOTES) . '"';
         
                 if (!empty($pdfList)) {
                     $inputHtml .= ' data-pdf-src="' . htmlspecialchars($pdfList, ENT_QUOTES) . '"';
                     $inputHtml .= ' data-pdf-path="' . htmlspecialchars('/images/stpageflip/' . trim($attrs['pdf'], '/') , ENT_QUOTES) . '"';
+                    if ($debug_mode == true){
+                        $article->text .= "<p class='alert alert-info'>Gefundene PDFs: " . $pdfList . " </p>";
+                    }
+                }
+                else{
+                     if ($debug_mode == true){
+                        $article->text .= "<p class='alert alert-danger'>KEINE gefundenen PDFs</p>";
+                    }
                 }
         
                 if (!empty($fileList)) {
                     $inputHtml .= ' data-img-path="' . htmlspecialchars('/images/stpageflip/' . trim($attrs['img'], '/') , ENT_QUOTES) . '"';
+                    if ($debug_mode == true){
+                        $article->text .= "<p class='alert alert-info'>Gefundene Bilder: " . $fileList . " </p>";
+                    }
+                }
+                else{
+                     if ($debug_mode == true){
+                        $article->text .= "<p class='alert alert-danger'>KEINE BILDER gefunden</p>";
+                    }
                 }
         
                 $inputHtml .= '>';
