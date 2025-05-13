@@ -263,6 +263,9 @@ show_debug_msg("controlls_for_book wird für Buch #" + ID + "ausgeführt" );
   const $img_files = jQuery(buch_id + '_img_files');
   const filenames = $img_files.val().split(',');
   const img_files_dir = $img_files.data('img-path');
+  show_debug_msg("input tag mit bilddaten: " + $img_files);
+  show_debug_msg("img daten: " + $filenames);
+  show_debug_msg("img pfad: " + $filenames);
 
 
   if (Array.isArray(filenames)) {
