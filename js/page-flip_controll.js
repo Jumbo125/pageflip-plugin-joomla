@@ -305,6 +305,7 @@ show_debug_msg("controlls_for_book wird für Buch #" + ID + "ausgeführt" );
       }
     );
     
+    const pages = document.querySelectorAll(`${buch_id} .page`);
     if (pages.length > 0) {
       pageFlip.loadFromHTML(pages);
       show_debug_msg(`✅ ${pages.length} Seite(n) in PageFlip geladen für "${buch_id_without_idselector}".`);
