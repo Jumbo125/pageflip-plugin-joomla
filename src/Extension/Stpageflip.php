@@ -101,6 +101,9 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
             return;
         }
         
+        //Debugg modus einfuegen
+        // Debug-Input an den Artikel anhängen (frühzeitig)
+           $article->text .= $debugInput;
 
          // Plugin läuft, aber tut nichts
         //Factory::getApplication()->enqueueMessage('Stpageflip Plugin: Testlauf');
