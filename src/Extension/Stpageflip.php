@@ -84,10 +84,14 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
         //Factory::getApplication()->enqueueMessage('onContentPrepare läuft');
         // Prüfen, ob Debug-Modus aktiviert ist
             $debug = $this->params->get('debug_mode', 0) == 1;
-
             // Debug-Hidden-Input vorbereiten
-            $debugInput = '<input type="hidden" id="stpageflip_debug" value="' . ($debug ? 'true' : 'false') . '">';
-
+            
+        if ($this->params->get('debug_mode', 0)) {
+            $debugInput = '<input type="hidden" id="stpageflip_debug" value="true">';
+        }
+        else{
+            $debugInput = '<input type="hidden" id="stpageflip_debug" value="false">';  
+        }
         if (count($event->getArguments()) < 4) {
             return;
         }
