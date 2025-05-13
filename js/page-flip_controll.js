@@ -98,7 +98,7 @@ const getAttrValue = ($container, key, fallback) => {
 
 function controlls_for_book(ID, data_height, data_width, aspect_ratio, din_format, single_center, mousewheel_scroll, density, slider, bt_options, home, download, prev, next, zoom_in, zoom_out, zoom_default, zoom_dblclick, fullscreen, reflection, tooltip, sound, transform, inside_button, color, color_hover) {
 
-show_debug_msg("controlls_for_book wird für Buch #" + ID + "ausgeführt" );
+show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
 
   // Arrays und variablen deklarieren###############################################
   // controlls Text bzw. wie und welche Symbole angezeigt werden ###############
