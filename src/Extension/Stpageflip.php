@@ -270,8 +270,8 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
                     }
 
                 if (!empty($pdfList)) {
-                    $inputHtml .= ' data-pdf-src="' . htmlspecialchars($pdfList, ENT_QUOTES) . '"';
-                    $inputHtml .= ' data-pdf-path="' . htmlspecialchars('/images/stpageflip/' . trim($attrs['pdf'], '/') , ENT_QUOTES) . '"';
+                    $inputHtml .= ' data-pdf-src="' . htmlspecialchars(Uri::root() . $pdfList, ENT_QUOTES) . '"';
+                    $inputHtml .= ' data-pdf-path="' . htmlspecialchars(Uri::root(). $pdfFolder, ENT_QUOTES) . '"';
                     if ($debug_mode == true){
                         $article->text .= "<p class='alert alert-info'>Gefundene PDFs: " . $pdfList . " </p>";
                     }
@@ -283,7 +283,7 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
                 }
         
                 if (!empty($fileList)) {
-                    $inputHtml .= ' data-img-path="' . htmlspecialchars('/images/stpageflip/' . trim($attrs['img'], '/') , ENT_QUOTES) . '"';
+                    $inputHtml .= ' data-img-path="' . htmlspecialchars(Uri::root(). '/images/stpageflip/' . trim($attrs['img'], '/') , ENT_QUOTES) . '"';
                     if ($debug_mode == true){
                         $article->text .= "<p class='alert alert-info'>Gefundene Bilder: " . $fileList . " </p>";
                     }

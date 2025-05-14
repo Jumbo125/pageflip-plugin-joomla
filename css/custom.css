@@ -181,3 +181,7 @@ display:inline-block;
   .fullscreen-enabled{
     overflow:visible !important;
   }
+
+    body{
+    overflow:auto !important;
+  }
