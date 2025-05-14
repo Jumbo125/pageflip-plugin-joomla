@@ -224,7 +224,7 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
             if (is_dir($imgFolder)) {
                 foreach (scandir($imgFolder) as $file) {
                     $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-                    if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
+                    if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'JPG'])) {
                         $imageFiles[] = $file;
                     }
                 }
