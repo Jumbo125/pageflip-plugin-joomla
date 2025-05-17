@@ -238,9 +238,9 @@
    
 
     </files>
-    <events>
-    <event>onAfterInitialise</event>
-</events>
+
+    <scriptfile>script.php</scriptfile>
+   
 
     <!-- ServiceProvider für Joomla 4/5 -->
     <services>
