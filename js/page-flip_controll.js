@@ -497,6 +497,7 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
             if (aktuelleSeite !== first_site && aktuelleSeite !== last_site) {
               const human_aktuelleSeite = aktuelleSeite + 1;
               $controll_leiste.find('.pdf-book-slider').attr("step", "2");
+              
 
               let linke_seite, rechte_seite, sliderSeite;
 
@@ -532,6 +533,7 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
 
             // Erste oder letzte Seite im Doppelseiten-Modus
             else {
+              
               // Außen-Buttons
               if (jQuery(buch_id).attr("data-prev") == "true" && jQuery(buch_id).attr("data-next") == "true") {
                 toggleButtonVisibility($controll_leiste.find('.bt-icon-next'), aktuelleSeite >= max_seitenAnzahl);
@@ -547,14 +549,25 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
               // Anzeige & Slider
               $controll_leiste.find('.current_page').html(aktuelleSeite);
               $controll_leiste.find('.all_sites').html(seitenanzahl);
-              $controll_leiste.find(".pdf-book-slider").val(aktuelleSeite);
+              console.log(aktuelleSeite);
+              if (aktuelleSeite == 1 ){
+                  $controll_leiste.find(".pdf-book-slider").val(aktuelleSeite);
+              }
+              else{
+                //muss lettze seite sein
+                console.log(max_seitenAnzahl);
+                //step auf 1 setzten, damit es keine probleme bei der anzahl gibt
+                  $controll_leiste.find('.pdf-book-slider').attr("step", "1");
+                  $controll_leiste.find(".pdf-book-slider").val(max_seitenAnzahl+1);
+              }
+            
             }
           }
 
           // Portrait-Modus (Einzelseitenanzeige)
           else {
             $controll_leiste.find('.pdf-book-slider').attr("step", "1");
-
+console.log("step = 1");
             // Außen-Buttons
             if (jQuery(buch_id).attr("data-prev") == "true" && jQuery(buch_id).attr("data-next") == "true") {
               toggleButtonVisibility($controll_leiste.find('.bt-icon-next'), aktuelleSeite >= max_seitenAnzahl);

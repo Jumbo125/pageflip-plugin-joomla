@@ -318,9 +318,11 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
 
 
             if (!empty($imageFiles)) {
-           
+                
+                if ($debug_mode == true){   
                     $article->text .= "<p class='alert alert-success'>Bilddatein sind vorhanden. Keine automaitsche Generierung erfolgt.</p>";
-      
+                }
+                
                 $fileList = implode(',', $imageFiles);
 
                 $inputHtml = '<input id="' . htmlspecialchars($bookId . '_img_files', ENT_QUOTES) . '" type="hidden" value="' . htmlspecialchars($fileList, ENT_QUOTES) . '"';
