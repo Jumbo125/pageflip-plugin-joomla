@@ -521,8 +521,8 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
 
               // Buttons innen (z. B. im Buch)
               if (jQuery(buch_id).attr("data-inside-button") == "true") {
-                toggleButtonVisibility($controll_leiste.find('.next_inside'), aktuelleSeite >= max_seitenAnzahl);
-                toggleButtonVisibility($controll_leiste.find('.prev_inside'), aktuelleSeite <= 1);
+                toggleButtonVisibility(jQuery(buch_id).find('.next_inside'), aktuelleSeite >= max_seitenAnzahl);
+                toggleButtonVisibility(jQuery(buch_id).find('.prev_inside'), aktuelleSeite <= 1);
               }
 
               // Anzeige & Slider
@@ -542,8 +542,8 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
 
               // Innen-Buttons
               if (jQuery(buch_id).attr("data-inside-button") == "true") {
-                toggleButtonVisibility($controll_leiste.find('.next_inside'), aktuelleSeite >= max_seitenAnzahl);
-                toggleButtonVisibility($controll_leiste.find('.prev_inside'), aktuelleSeite <= 1);
+                toggleButtonVisibility(jQuery(buch_id).find('.next_inside'), aktuelleSeite >= max_seitenAnzahl);
+                toggleButtonVisibility(jQuery(buch_id).find('.prev_inside'), aktuelleSeite <= 1);
               }
 
               // Anzeige & Slider
@@ -567,7 +567,7 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
           // Portrait-Modus (Einzelseitenanzeige)
           else {
             $controll_leiste.find('.pdf-book-slider').attr("step", "1");
-console.log("step = 1");
+
             // Außen-Buttons
             if (jQuery(buch_id).attr("data-prev") == "true" && jQuery(buch_id).attr("data-next") == "true") {
               toggleButtonVisibility($controll_leiste.find('.bt-icon-next'), aktuelleSeite >= max_seitenAnzahl);
