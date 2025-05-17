@@ -45,6 +45,10 @@
     background-color: white;
 }
 
+.controls{
+    margin-top: 5vh;
+    position: relative;
+}
 .controls_fullscreen {
     position: absolute;
     bottom: 5px;
@@ -52,7 +56,13 @@
     left: 5%;
     z-index: 100;
 }
-
+.controls_fullscreen .bt-options{
+    background: #ffffff8f;
+    width: fit-content;
+    padding: 1vw;
+    border-radius: 5px;
+    box-shadow: 0px 0px 3px 0px black;
+}
 .pdf_control_none {
     display: none !important;
 }
@@ -182,6 +192,42 @@ display:inline-block;
     overflow:visible !important;
   }
 
-    body{
-    overflow:auto !important;
-  }
+  /* Linke Seite mit Schatten zur Mitte */
+.--left::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 30px;
+  height: 100%;
+  background: linear-gradient(to left, rgba(0,0,0,0.1), transparent);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Rechte Seite mit Schatten zur Mitte */
+.--right::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 30px;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0,0,0,0.1), transparent);
+  pointer-events: none;
+  z-index: 2;
+}
+
+ .pdf_book_fullscreen.pseudo-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  background: #000; /* Optional: dunkler Hintergrund */
+  overflow: hidden;
+}
+body.pseudo-fullscreen-active {
+  overflow: hidden;
+}

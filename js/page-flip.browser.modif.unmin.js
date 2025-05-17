@@ -1,4 +1,3 @@
-
 !(function (t, e) {
     "object" == typeof exports && "undefined" != typeof module ? e(exports) : "function" == typeof define && define.amd ? define(["exports"], e) : e(((t = t || self).St = {}));
 })(this, function (t) {
@@ -598,6 +597,7 @@
             }
         }
         flipToPage(t, e) {
+          this.app.trigger("beforeFlip", this, { targetPage: t, currentPage: this.app.getCurrentPageIndex() });
             const i = this.app.getPageCollection().getCurrentSpreadIndex(),
                 s = this.app.getPageCollection().getSpreadIndexByPage(t);
             try {
@@ -605,17 +605,33 @@
             } catch (t) {}
         }
         flipNext(t) {
+           this.app.trigger("beforeFlip", this, { targetPage: t, currentPage: this.app.getCurrentPageIndex() });
             this.flip({ x: this.render.getRect().left + 2 * this.render.getRect().pageWidth - 10, y: "top" === t ? 1 : this.render.getRect().height - 2 });
         }
         flipPrev(t) {
+           this.app.trigger("beforeFlip", this, { targetPage: t, currentPage: this.app.getCurrentPageIndex() });
             this.flip({ x: 10, y: "top" === t ? 1 : this.render.getRect().height - 2 });
         }
         stopMove() {
-            if (null === this.calc) return;
-            const t = this.calc.getPosition(),
-                e = this.getBoundsRect(),
-                i = "bottom" === this.calc.getCorner() ? e.height : 0;
-            t.x <= 0 ? this.animateFlippingTo(t, { x: -e.pageWidth, y: i }, !0) : this.animateFlippingTo(t, { x: e.pageWidth, y: i }, !1);
+             if (null === this.calc) return;
+
+    const t = this.calc.getPosition(),
+          e = this.getBoundsRect(),
+          goingToNext = t.x <= 0,
+          i = "bottom" === this.calc.getCorner() ? e.height : 0;
+
+    // Hier ist klar, ob wir die Seite wirklich umblättern
+    if (goingToNext || t.x > e.pageWidth) {
+        this.app.trigger("beforeFlip", this, {
+            type: "manual",
+            direction: goingToNext ? "next" : "prev",
+            currentPage: this.app.getCurrentPageIndex()
+        });
+    }
+
+    goingToNext
+        ? this.animateFlippingTo(t, { x: -e.pageWidth, y: i }, !0)
+        : this.animateFlippingTo(t, { x: e.pageWidth, y: i }, !1);
         }
         showCorner(t) {
             const e = this.render.convertToGlobal(t),
@@ -915,11 +931,10 @@
                 }),
                 (this.onMouseDown = (t) => {
                     console.log("MouseDown", t.clientX, t.clientY);
-                    const e = t.target;
-                   const flipbookEl = e.closest('.ui-flipbook');
-                   const zoomDblclick = flipbookEl?.dataset?.zoomDblclick;
-                  
-                   if (zoomDblclick == "false") {
+                    const e = t.target,
+                        i = e.closest(".ui-flipbook"),
+                        s = i?.dataset?.zoomDblclick;
+                    if ("false" == s) {
                         if (e && e.closest(".move_over")) return void console.log("Flip blockiert – .move_over");
                         if (this.checkTarget(t.target)) {
                             const e = this.getMousePos(t.clientX, t.clientY);

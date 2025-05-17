@@ -1,5 +1,8 @@
+
+
 //Debug modus
 const debugValue = document.getElementById('stpageflip_debug')?.value;
+const default_panzoom_zoom = 1;
 
 if (debugValue === 'true') {
     console.log('Debug-Modus ist aktiviert');
@@ -31,27 +34,88 @@ function show_debug_msg(text){
 
     // panzoom prüfen
   if (typeof window.Panzoom === 'function') {
-    const testElem = document.createElement('div');
-    document.body.appendChild(testElem);
+  console.log('✅ Panzoom vorhanden.');
 
-    try {
-      const instance = Panzoom(testElem);
-
-      if (typeof instance.zoomIn === 'function') {
-        console.log('✅ Panzoom geladen, zoomIn() verfügbar.');
-      } else {
-        console.warn('⚠️ Panzoom vorhanden, aber zoomIn() nicht verfügbar.');
-      }
-    } catch (e) {
-      console.error('❌ Fehler beim Initialisieren von Panzoom:', e);
-    }
+  // Optional: genauere Prüfung, aber OHNE DOM-Manipulation
+  if (Panzoom.prototype?.zoomIn) {
+    console.log('✅ zoomIn-Methode verfügbar.');
   } else {
-    console.error('❌ Panzoom ist nicht verfügbar (window.Panzoom fehlt).');
+    console.warn('⚠️ zoomIn nicht im Prototype.');
   }
+} else {
+  console.error('❌ Panzoom ist nicht verfügbar.');
+}
 
+//Detect brwose ios
+function detectOS() {
+  const ua = navigator.userAgent;
+
+  if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) return "iOS";
+  if (/Android/.test(ua)) return "Android";
+  if (/Windows NT/.test(ua)) return "Windows";
+  if (/Mac OS X/.test(ua)) return "macOS";
+  if (/Linux/.test(ua)) return "Linux";
+  return "unknown";
+}
+
+function detectBrowser() {
+  const ua = navigator.userAgent;
+
+  if (/CriOS/.test(ua)) return "Chrome on iOS";
+  if (/FxiOS/.test(ua)) return "Firefox on iOS";
+  if (/EdgiOS/.test(ua)) return "Edge on iOS";
+  if (/OPiOS/.test(ua)) return "Opera on iOS";
+  if (/Safari/.test(ua) && /iPhone|iPad|iPod/.test(ua)) return "Safari on iOS";
+  if (/Chrome/.test(ua)) return "Chrome";
+  if (/Firefox/.test(ua)) return "Firefox";
+  if (/Safari/.test(ua)) return "Safari";
+  if (/Edge/.test(ua)) return "Edge";
+  return "unknown";
+}
+
+
+//buich id ist ohne # zeichen
+function check_current_panzoom(buch_id){
+    init_panzoom_if_needed(buch_id);
+    //teste den default zoom
+    const panzoom = PageFlipRegistry[buch_id].panzoom;
+    if (!panzoom) return;
+    const current = panzoom.getScale();
+    let $controll_leiste;
+
+    //passenden slider suchen
+      jQuery(".slider").each(function () {
+       show_debug_msg("Slider gefunden und zugeordnert: " + jQuery(this).attr("data-book-id"));
+        if (jQuery(this).attr("data-book-id") == "#" + buch_id) {
+          $controll_leiste = jQuery(this).parent();
+
+        }
+      });
+    
+      //panzoom wieder löschen
+      panzoom.destroy();
+
+    if (current == default_panzoom_zoom){
+      $controll_leiste.find(".bt-icon-zoom-standard").addClass("pdf_control_none");
+      return true;
+    }
+    else {
+       $controll_leiste.find(".bt-icon-zoom-standard").removeClass("pdf_control_none");
+      return false;
+    }
+      
+  
+}
+
+function check_if_move(buch_id){
+
+
+}
 
 //------------------------
 jQuery(document).ready(function () {
+  
+  
   jQuery("body").find(".flip-book").each(function () {
     const id = jQuery(this).attr('id');
     if (id) {
@@ -157,7 +221,7 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
 
     <a class="bt-icon-back" title="Reset">
       <abbr title="Standard Platzierung"></abbr>
-      <i class="bi bi-back back" data-pdf-book="pdf_id"></i>
+      <i class="bi bi-bootstrap-reboot back" data-pdf-book="pdf_id"></i>
     </a>
 
     <a class="bt-icon-fullscreen" title="Vollbild">
@@ -316,7 +380,7 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
         size: "fixed",
         showCover: true,
         maxShadowOpacity: 0.5,
-        mobileScrollSupport: false,
+        mobileScrollSupport: true,
         useMouseEvents: true
       }
     );
@@ -334,7 +398,7 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
     PageFlipRegistry[buch_id_without_idselector] = {
       instance: pageFlip,
       $element: jQuery(buch_id),
-      zoom: 1,
+      zoom: default_panzoom_zoom,
       panzoom: null, // kommt später rein
       sound: null //kommt später rein, falls sound true ist 
     };
@@ -349,11 +413,14 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
     }
     //aktuelle position speichern um nach vreschie manöver zurückzusetzetn
 
+    
     jQuery(buch_id).attr("data-original-left", jQuery(buch_id).css('left'));
     jQuery(buch_id).attr("data-original-top", jQuery(buch_id).css('top'));
 
     // Buch informationen
     const totalPages = pageFlip.getPageCount();
+
+
 
     pageFlip.on("flip", () => {
 
@@ -388,6 +455,11 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
     }, 50);
   }
 
+    // Hilfsfunktion: Setzt oder entfernt "pdf_control_none" je nach Bedingung
+    function toggleButtonVisibility($button, shouldHide) {
+      $button.toggleClass("pdf_control_none", shouldHide);
+    }
+
   function initializeControls(pageFlip_Instanz) {
 
     //Seitennummer aktualisiern
@@ -408,7 +480,6 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
        show_debug_msg("Slider gefunden und zugeordnert: " + jQuery(this).attr("data-book-id"));
         if (jQuery(this).attr("data-book-id") == "#" + $buch.attr("id")) {
           $controll_leiste = jQuery(this).parent();
-
         }
       });
       if (jQuery(".slider").length <= 0 ){
@@ -419,49 +490,91 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
         portrait = true;
       }
 
-      //falls nicht im portrait design, wird doppelseitig angezeigt
-      if (portrait === false) {
-        if (aktuelleSeite !== first_site && aktuelleSeite !== last_site) {
+            // Slider-Maximum setzen
+          $controll_leiste.find('.pdf-book-slider').attr("max", last_site);
 
-          //Zurzeit werden zwei seiten angezeigt, linke und rechte, daher Seite x und x von Gesamtzahl
-          const human_aktuelleSeite = aktuelleSeite + 1;
+          if (!portrait) {
+            // Doppelseiten-Modus (nicht erste/letzte Seite)
+            if (aktuelleSeite !== first_site && aktuelleSeite !== last_site) {
+              const human_aktuelleSeite = aktuelleSeite + 1;
+              $controll_leiste.find('.pdf-book-slider').attr("step", "2");
 
-          if (human_aktuelleSeite % 2 === 0) {
-            //aktuelle seite ist eine garde zahl, daher ist die Linke Seite die aktuelle.  links plus 1 für recht seite
-            //bild der rechten seite ermitteln
-            const linke_seite = human_aktuelleSeite;
-            const rechte_seite = human_aktuelleSeite + 1;
-            $controll_leiste.find('.current_page').html(linke_seite + " und " + rechte_seite);
-            $controll_leiste.find('.all_sites').html(seitenanzahl);
-            $controll_leiste.find(".pdf-book-slider").val(linke_seite);
+              let linke_seite, rechte_seite, sliderSeite;
+
+              if (human_aktuelleSeite % 2 === 0) {
+                // Gerade Seite – linke Seite ist human_aktuelleSeite
+                linke_seite = human_aktuelleSeite;
+                rechte_seite = human_aktuelleSeite + 1;
+                sliderSeite = linke_seite;
+              } else {
+                // Ungerade Seite – rechte Seite ist human_aktuelleSeite
+                rechte_seite = human_aktuelleSeite;
+                linke_seite = human_aktuelleSeite - 1;
+                sliderSeite = linke_seite;
+              }
+
+              // Vor-/Zurück-Buttons außen
+              if (jQuery(buch_id).attr("data-prev") == "true" && jQuery(buch_id).attr("data-next") == "true") {
+                toggleButtonVisibility($controll_leiste.find('.bt-icon-next'), rechte_seite >= max_seitenAnzahl);
+                toggleButtonVisibility($controll_leiste.find('.bt-icon-prev'), linke_seite <= 1);
+              }
+
+              // Buttons innen (z. B. im Buch)
+              if (jQuery(buch_id).attr("data-inside-button") == "true") {
+                toggleButtonVisibility($controll_leiste.find('.next_inside'), aktuelleSeite >= max_seitenAnzahl);
+                toggleButtonVisibility($controll_leiste.find('.prev_inside'), aktuelleSeite <= 1);
+              }
+
+              // Anzeige & Slider
+              $controll_leiste.find('.current_page').html(linke_seite + " und " + rechte_seite);
+              $controll_leiste.find('.all_sites').html(seitenanzahl);
+              $controll_leiste.find(".pdf-book-slider").val(sliderSeite);
+            }
+
+            // Erste oder letzte Seite im Doppelseiten-Modus
+            else {
+              // Außen-Buttons
+              if (jQuery(buch_id).attr("data-prev") == "true" && jQuery(buch_id).attr("data-next") == "true") {
+                toggleButtonVisibility($controll_leiste.find('.bt-icon-next'), aktuelleSeite >= max_seitenAnzahl);
+                toggleButtonVisibility($controll_leiste.find('.bt-icon-prev'), aktuelleSeite <= 1);
+              }
+
+              // Innen-Buttons
+              if (jQuery(buch_id).attr("data-inside-button") == "true") {
+                toggleButtonVisibility($controll_leiste.find('.next_inside'), aktuelleSeite >= max_seitenAnzahl);
+                toggleButtonVisibility($controll_leiste.find('.prev_inside'), aktuelleSeite <= 1);
+              }
+
+              // Anzeige & Slider
+              $controll_leiste.find('.current_page').html(aktuelleSeite);
+              $controll_leiste.find('.all_sites').html(seitenanzahl);
+              $controll_leiste.find(".pdf-book-slider").val(aktuelleSeite);
+            }
           }
-          else if (human_aktuelleSeite % 2 !== 0) {
-            //aktuelle seite ist eine ungarde zahl, daher ist die rechte Seite die aktuelle.  rechte Seite minus 1 für linke seite
-            //bild der rechten seite ermitteln
-            const rechte_seite = human_aktuelleSeite;
-            const linke_seite = human_aktuelleSeite - 1;
-            $controll_leiste.find('.current_page').html(linke_seite + " und " + rechte_seite);
+
+          // Portrait-Modus (Einzelseitenanzeige)
+          else {
+            $controll_leiste.find('.pdf-book-slider').attr("step", "1");
+
+            // Außen-Buttons
+            if (jQuery(buch_id).attr("data-prev") == "true" && jQuery(buch_id).attr("data-next") == "true") {
+              toggleButtonVisibility($controll_leiste.find('.bt-icon-next'), aktuelleSeite >= max_seitenAnzahl);
+              toggleButtonVisibility($controll_leiste.find('.bt-icon-prev'), aktuelleSeite <= 1);
+            }
+
+            // Innen-Buttons
+            if (jQuery(buch_id).attr("data-inside-button") == "true") {
+              toggleButtonVisibility(jQuery(buch_id).find('.next_inside'), aktuelleSeite >= max_seitenAnzahl);
+              toggleButtonVisibility(jQuery(buch_id).find('.prev_inside'), aktuelleSeite <= 1);
+            }
+
+            // Anzeige & Slider
+            $controll_leiste.find('.current_page').html(aktuelleSeite);
             $controll_leiste.find('.all_sites').html(seitenanzahl);
-            $controll_leiste.find(".pdf-book-slider").val(rechte_seite);
+            $controll_leiste.find(".pdf-book-slider").val(aktuelleSeite);
           }
 
-        }
-        else {
-          //Seite x von Seite x im Slider einfügen
-          $controll_leiste.find('.current_page').html(aktuelleSeite);
-          $controll_leiste.find('.all_sites').html(seitenanzahl);
-        }
-
-      }
-      else {
-        //Seite x von Seite x im Slider einfügen
-        $controll_leiste.find('.current_page').html(aktuelleSeite);
-        $controll_leiste.find('.all_sites').html(seitenanzahl);
-      }
-      $controll_leiste.find(".pdf-book-slider").val(aktuelleSeite);
-
-
-    }
+}
 
 
     //---------------Reflection Function
@@ -742,6 +855,10 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
     // Jetzt erst nach dem echten Fullscreen-Wrapper einfügen
     $fullscreenWrapper.after($controls);
 
+    //prüfe current panzoom scale und setze dementsprechend den rest button auf sichtbar
+       check_current_panzoom(buch_id_without_idselector);
+   
+
     //falls inline buttons erwünscht sind, werdend iese nun eingeügt
     if (inside_button == true) {
       //next prev_button
@@ -763,18 +880,20 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
 
     //nach umblättern
     pageFlip_Instanz.on("flip", (e) => {
+      update_reflaction(pageFlip_Instanz, $buch);
+      update_pagenumber(pageFlip_Instanz, $buch);
+    });
+
+    //vor dem umblättern
+  pageFlip_Instanz.on("beforeFlip", (e) => {
       const basePath = $buch.attr("data-base-path") || ""; // ← wird vom Plugin gesetzt
       const mp3_path = basePath + "mp3/turn.mp3";
       const flipSound = new Audio(mp3_path);
-      update_reflaction(pageFlip_Instanz, $buch);
-      update_pagenumber(pageFlip_Instanz, $buch);
-
-      if (PageFlipRegistry[buch_id.replace("#", "")].sound == true && userInteracted == true) {
+    if (PageFlipRegistry[buch_id.replace("#", "")].sound == true && userInteracted == true) {
         flipSound.currentTime = 0;
         flipSound.play();
       }
-
-    });
+  });
 
 
 
@@ -854,14 +973,15 @@ function init_panzoom_if_needed(buch_id) {
     const panzoom = Panzoom(panzoom_wrapper_elem, {
       maxScale: 5,
       minScale: 0.2,
-      contain: false
+      contain: false,
+       disablePan: true // ← wichtig: verhindert unbeabsichtigtes Draggen
     });
 
     // Optional: anfängliche Skalierung setzen, wenn nötig
-    panzoom.zoom(0.5, { animate: false });
+    panzoom.zoom(default_panzoom_zoom, { animate: false });
 
     PageFlipRegistry[buch_id].panzoom = panzoom;
-    PageFlipRegistry[buch_id].originalScale = 0.5;
+    PageFlipRegistry[buch_id].originalScale = default_panzoom_zoom;
   }
 }
 
@@ -918,31 +1038,13 @@ function zoom_reset_pdf(buch_id) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function updateFullscreenButton($controls, isFullscreen) {
+  console.log(isFullscreen);
   $controls.find(".fullscreen").each(function () {
     const $btn = jQuery(this);
+    const $btn_ico = $btn.closest(".bt-options").find(".bi");
     if (isFullscreen) {
+      $btn.closest(".bt-options").attr("data-original_color" ,$btn_ico.css("color"));
       $btn.removeClass("bi-fullscreen").addClass("bi-fullscreen-exit");
       $btn.closest(".controls").addClass("controls_fullscreen");
     } else {
@@ -953,22 +1055,54 @@ function updateFullscreenButton($controls, isFullscreen) {
 }
 
 function fullscreen_pdf(id) {
-  // if already full screen; exit
-  // else go fullscreen
-
+  console.log("test");
   const $flipbook = jQuery(id);
   const $container = $flipbook.closest(".pdf_book_fullscreen");
   const $controls = $container.find(".controls").length > 0
-    ? $container.find(".controls")       // falls ins .pdf_book_fullscreen verschoben
-    : $container.next(".controls");      // falls noch daneben
+    ? $container.find(".controls")
+    : $container.next(".controls");
 
-  if (
-    document.fullscreenElement ||
+  // 👉 iOS-Fallback
+  if (detectOS() === "iOS") {
+    const isActive = $flipbook.attr("data-fullscreen-aktiv") === "true";
+
+    if (isActive) {
+      // Pseudo-Fullscreen beenden
+      $flipbook.attr("data-fullscreen-aktiv", "false");
+      $flipbook.removeClass("fullscreen-enabled").addClass("fullscreen-disabled");
+      $container.removeClass("pseudo-fullscreen");
+      jQuery("body").removeClass("pseudo-fullscreen-active");
+      updateFullscreenButton($controls, false);
+      if (typeof reflect_display_show === "function") {
+        reflect_display_show(id);
+      }
+      $container.after($controls);
+      zoom_reset_pdf(id.replace("#", ""));
+    } else {
+      // Pseudo-Fullscreen aktivieren
+      $flipbook.attr("data-fullscreen-aktiv", "true");
+      $flipbook.addClass("fullscreen-enabled").removeClass("fullscreen-disabled");
+      $container.addClass("pseudo-fullscreen");
+      jQuery("body").addClass("pseudo-fullscreen-active");
+      updateFullscreenButton($controls, true);
+      if (typeof reflect_display_hide === "function") {
+        reflect_display_hide(id);
+      }
+      $container.append($controls);
+    }
+    return;
+  }
+
+  // 👉 Desktop-Fullscreen prüfen
+  const isFullscreen = document.fullscreenElement ||
     document.webkitFullscreenElement ||
     document.mozFullScreenElement ||
-    document.msFullscreenElement
-  ) {
-    // 👉 Verlassen des Fullscreen-Modus
+    document.msFullscreenElement;
+
+    //egentliches starten und beenden vom fullscreen
+    //console.log("isfullsc" + isFullscreen);
+  if (isFullscreen) {
+    // Vollbild verlassen
     if (document.exitFullscreen) {
       document.exitFullscreen();
     } else if (document.mozCancelFullScreen) {
@@ -979,35 +1113,19 @@ function fullscreen_pdf(id) {
       document.msExitFullscreen();
     }
 
-    zoom_reset_pdf(id.replace("#", ""));
-
-
-    // Attribut setzen
     $flipbook.attr("data-fullscreen-aktiv", "false");
-    // Fullscreen AUS
-    $flipbook.attr("data-fullscreen-aktiv", "false");
-    if (!$flipbook.hasClass("fullscreen-disabled")) {
-      $flipbook.addClass("fullscreen-disabled");
-    }
-    $flipbook.removeClass("fullscreen-enabled"); // optional
-
-    //butons im contrl anpassen
-    updateFullscreenButton($controls, false); // beim Verlassen
-
+    $flipbook.removeClass("fullscreen-enabled").addClass("fullscreen-disabled");
+    updateFullscreenButton($controls, false);
     if (typeof reflect_display_show === "function") {
       reflect_display_show(id);
     }
-
-    //controls verschieben
     $container.after($controls);
-
+    zoom_reset_pdf(id.replace("#", ""));
 
   } else {
-    // 👉 Enter Fullscreen
-
+    // Vollbild betreten
     zoom_in_pdf(id.replace("#", ""), 1.3);
-    const element = $flipbook.closest(".pdf_book_fullscreen").get(0);
-
+    const element = $container.get(0);
 
     if (element.requestFullscreen) {
       element.requestFullscreen();
@@ -1019,71 +1137,32 @@ function fullscreen_pdf(id) {
       element.msRequestFullscreen();
     }
 
-    // Attribut setzen
     $flipbook.attr("data-fullscreen-aktiv", "true");
-    // Fullscreen EIN
-    $flipbook.attr("data-fullscreen-aktiv", "true");
-    if (!$flipbook.hasClass("fullscreen-enabled")) {
-      $flipbook.addClass("fullscreen-enabled");
-    }
-    $flipbook.removeClass("fullscreen-disabled"); // optional
-
-    updateFullscreenButton($controls, true);  // beim Betreten
-
+    $flipbook.addClass("fullscreen-enabled").removeClass("fullscreen-disabled");
+    updateFullscreenButton($controls, true);
     if (typeof reflect_display_hide === "function") {
       reflect_display_hide(id);
     }
-    //contrlls verschieben
     $container.append($controls);
   }
-
 }
 
-document.addEventListener("fullscreenchange", handleFullscreenChange);
-document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
-document.addEventListener("mozfullscreenchange", handleFullscreenChange);
-document.addEventListener("MSFullscreenChange", handleFullscreenChange);
-
-function handleFullscreenChange() {
-  const isFullscreen = document.fullscreenElement ||
-    document.webkitFullscreenElement ||
-    document.mozFullScreenElement ||
-    document.msFullscreenElement;
-  if (!isFullscreen) {
-    jQuery(".pdf_book_fullscreen").each(function () {
-      const $container = jQuery(this);
-      const $flipbook = $container.find(".ui-flipbook"); // oder passende Klasse
-      const id = $flipbook.attr("id");
-      const $controls = $container.find(".controls").length > 0
-        ? $container.find(".controls")
-        : $container.next(".controls");
-
-      // Update attribute & classes
-      $flipbook.attr("data-fullscreen-aktiv", "false");
-      $flipbook.removeClass("fullscreen-enabled").addClass("fullscreen-disabled");
-      $flipbook.addClass("fullscreen-disabled");
-
-      updateFullscreenButton($controls, false);
-      if (typeof reflect_display_show === "function") {
-        reflect_display_show("#" + $flipbook.attr("id"));
-      }
-
-      $container.after($controls);
-      zoom_reset_pdf(id.replace("#", ""));
-    });
-  }
-}
 
 function move_back(id) {
   // Reset position
-  var pdf_left = jQuery(id).attr("data-original-left");
-  var pdf_top = jQuery(id).attr("data-original-top");
-
+  const pdf_left = jQuery(id).attr("data-original-left");
+  const pdf_top = jQuery(id).attr("data-original-top");
+ 
   jQuery(id).css("left", pdf_left);
   jQuery(id).css("top", pdf_top);
+  jQuery(id).removeClass("ui-draggable ui-draggable-handle");
+   const panzoomInstance = PageFlipRegistry[id.replace("#","")]?.panzoom;
+
+  if (panzoomInstance) {
+    panzoomInstance.pan(0, 0);
+  }
 
 }
-
 
 
 function reflect_display_hide(id) {
@@ -1098,9 +1177,10 @@ function reflect_display_show(id) {
 }
 
 function move_pdf(id) {
+  //falls zur zeit draggable aktiv
   if (jQuery(id).hasClass("move_over") == true) {
     reflect_display_show(id);
-    jQuery(id).draggable({ disabled: true });
+    jQuery(id).removeClass("ui-draggable ui-draggable-handle ui-draggable-disabled"); 
     jQuery(id).removeClass("move_over");
     jQuery(id).parent().parent().parent().find(".move").removeClass("move_bt_active");
   }
@@ -1110,16 +1190,6 @@ function move_pdf(id) {
     jQuery(id).addClass("move_over");
     jQuery(id).parent().parent().parent().find(".move").addClass("move_bt_active");
   }
-}
-
-function move_back(id) {
-  // Reset position
-  var pdf_left = jQuery(id).attr("data-original-left");
-  var pdf_top = jQuery(id).attr("data-original-top");
-
-  jQuery(id).css("left", pdf_left);
-  jQuery(id).css("top", pdf_top);
-
 }
 
 
@@ -1233,6 +1303,32 @@ jQuery(document).ready(function () {
 
   });
 
+  document.addEventListener("fullscreenchange", function () {
+  if (!document.fullscreenElement) {
+    jQuery(".ui-flipbook[data-fullscreen-aktiv='true']").each(function () {
+      const id = "#" + jQuery(this).attr("id");
+      console.log("Fullscreen beendet für:", id);
+
+      // Nur das Beenden behandeln, nicht erneut aktivieren!
+      jQuery(this).attr("data-fullscreen-aktiv", "false");
+      jQuery(this).removeClass("fullscreen-enabled").addClass("fullscreen-disabled");
+
+      const $container = jQuery(this).closest(".pdf_book_fullscreen");
+      const $controls = $container.find(".controls").length > 0
+        ? $container.find(".controls")
+        : $container.next(".controls");
+
+      updateFullscreenButton($controls, false);
+      if (typeof reflect_display_show === "function") {
+        reflect_display_show(id);
+      }
+      $container.after($controls);
+      zoom_reset_pdf(id.replace("#", ""));
+    });
+  }
+});
+
+
   // Draggable aktivieren
   jQuery(document).on("click", ".bt-options .move", function () {
     const id = jQuery(this).closest(".bt-options").attr("data-book-id");
@@ -1293,8 +1389,11 @@ jQuery(document).ready(function () {
     mouse_over_id = mouse_over ? jQuery(this).attr("id") : "";
   });
 
+
+if (detectOS() !== "iOS" && detectOS() !== "Android") {
   // Vanilla JS für wheel-Event
   window.addEventListener('wheel', function (e) {
+
     if (!mouse_over) return; // Nur wenn Maus über dem Buch ist
     const id = mouse_over_id;
 
@@ -1309,6 +1408,10 @@ jQuery(document).ready(function () {
       e.preventDefault(); // jetzt erlaubt!
     }
   }, { passive: false }); // **WICHTIG**
+
+}// iOS: kein wheel
+
+
 
   jQuery('.ui-flipbook').on('dblclick', function (e) {
 
