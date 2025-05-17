@@ -94,7 +94,6 @@ function check_current_panzoom(buch_id){
     
       //panzoom wieder löschen
       panzoom.destroy();
-
     if (current == default_panzoom_zoom){
       $controll_leiste.find(".bt-icon-zoom-standard").addClass("pdf_control_none");
       return true;
@@ -1275,6 +1274,7 @@ jQuery(document).ready(function () {
   // Zoom-in Button
   jQuery(document).on("click", ".bt-options .zoom-in", function () {
     const id = jQuery(this).attr("data-pdf-book").replace("#", "");
+    check_current_panzoom(id);
     reflect_display_hide(id);
     zoom_in_pdf(id);
   });
@@ -1282,6 +1282,7 @@ jQuery(document).ready(function () {
   // Zoom-out Button
   jQuery(document).on("click", ".bt-options .zoom-out", function () {
     const id = jQuery(this).attr("data-pdf-book").replace("#", "");
+    check_current_panzoom(id);
     reflect_display_hide(id);
     zoom_out_pdf(id);
   });
@@ -1289,6 +1290,7 @@ jQuery(document).ready(function () {
   // Zoom-default Button
   jQuery(document).on("click", ".bt-options .zoom-default", function () {
     const id = jQuery(this).attr("data-pdf-book").replace("#", "");
+    jQuery(this).closest(".bt-icon-zoom-standard").addClass("pdf_control_none");
     reflect_display_show(id);
     zoom_reset_pdf(id);
   });
