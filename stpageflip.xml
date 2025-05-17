@@ -285,6 +285,13 @@
                 <option value="0">Nein</option>
             </field>
 
+            <field name="create_img" type="radio" default="0"
+              label="Bilder automatisch aus PDF generieren"
+              description="Sollen Bilder automatisch aus PDF generiert werden?">
+              <option value="1">Ja</option>
+              <option value="0">Nein</option>
+            </field>
+
             <field name="debug_mode" type="radio" default="0"
                 label="Debug-Modus aktivieren?"
                 description="Soll der Debug-Modus des Plugins aktiviert werden?">

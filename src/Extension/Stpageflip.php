@@ -254,14 +254,74 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
                         $article->text .= "<p class='alert alert-danger'>PDF Ordner NICHT gefunden: " . $pdfFolder . ". Der Ordner muss in " .JPATH_ROOT . "/images/stpageflip/ liegen </p>";
                     }
             }
-        
-            if (!empty($imageFiles) || !empty($pdfFiles)) {
+
+            //##################################################################################################
+            //Falls keine Bilder vorhanden sind, jedoch aber ein Pdf, dann erstelle die bilder automatisch mit imgmagic
+            if (empty($imageFiles) && !empty($pdfFiles)) {
+                if ($debug_mode == true){           
+                        $article->text .= "<p class='alert alert-warning'>Image Ordner gefunden: " . $imgFolder . ". Es liegt eine PDF datei in diesem Ordner. Jedoch kein img im Format ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'JPG']. Bild wird nun automatisch erstellt. </p>";
+                    }
+                if (!extension_loaded('imagick')) {
+                        $article->text .= "<p class='alert alert-danger'>⚠️ PHP extension 'imagick' ist nicht verfügbar. Bilder können nicht automatisch erstellt werden.</p>";
+                } else {
+                    if ($debug_mode == true){   
+                        $version = \Imagick::getVersion();
+                         $article->text .= "<p class='alert alert-warning'>⚠️ PHP extension 'imagick' ist verfügbar. Version: " . $version['versionString'] . ". <br>  Bilder können automatisch erstellt werden. <br> Es wird immer das erste PDF verwendet!</p>";
+                     }
+                
+                     //je nach XML DATEI------------------------------------
+                     $createImages = (int) $this->params->get('create_img', 0);
+                    if ($createImages && empty($imageFiles) && !empty($pdfFiles)) {
+
+                         $article->text .= "<p class='alert alert-success'>In den Plugin-Einstellungen ist die automatische Bilderstellung aktiviert.</p>";
+                //Bilder automatisch generieren --------------------------------------------------
+                    $filename = $pdfFiles[0]; // PDF-Datei im gleichen Verzeichnis
+                    $outputPrefix = 'seite_';         // Präfix für WebP-Dateien
+                     $pdfPath =   $imgFolder . '/' . $filename;
+
+                        if (!file_exists($pdfPath)) {
+                             $article->text .= "<p class='alert alert-danger'>PDF fie not found: ".  $pdfPath . "</p>";
+                        }
+                        else{
+                            try {
+                                // Neue Imagick-Instanz mit dem PDF
+                                $imagick = new \Imagick();
+                                $imagick->setResolution(150, 150); // DPI – optional anpassen
+                                $imagick->readImage($pdfPath);
+
+                                $imagick->setImageFormat('webp');
+                                $create_txt = "";
+                                foreach ($imagick as $i => $page) {
+                                    $page->setImageFormat('webp');
+                                    $outputFile = $imgFolder . '/' . $outputPrefix . ($i + 1) . '.webp';
+                                    $page->writeImage($outputFile);
+                                    $create_txt .= "Seite " . ($i + 1) . " →" . $outputFile ." erstellt <br>";
+                                    $imageFiles[$i] = $outputPrefix . ($i + 1) . '.webp';
+                                    //erstelle bilder in img array ewinfügen
+
+                                }
+                                $article->text .= "<p class='alert alert-success'>" . $create_txt  . "</p>";
+
+                                $imagick->clear();
+                                $imagick->destroy();
+                                $article->text .= "<p class='alert alert-success'>✅ Alle Seiten erfolgreich konvertiert.</p>";
+                            } catch (Exception $e) {
+                                $article->text .= "<p class='alert alert-success'>❌ Fehler: " . $e->getMessage() . "</p>";
+                            }
+                        }
+                    }
+                    else{
+                         $article->text .= "<p class='alert alert-danger'>In den Plugin-Einstellungen ist die automatische Bilderstellung deaktiviert.</p>";
+                    }
+                }
+            }
+
+
+            if (!empty($imageFiles)) {
+           
+                    $article->text .= "<p class='alert alert-success'>Bilddatein sind vorhanden. Keine automaitsche Generierung erfolgt.</p>";
+      
                 $fileList = implode(',', $imageFiles);
-                $pdfList = implode(',', $pdfFiles);
-        
-                //Factory::getApplication()->enqueueMessage('create input: id="' . $bookId . '"');
-                 
-                    
 
                 $inputHtml = '<input id="' . htmlspecialchars($bookId . '_img_files', ENT_QUOTES) . '" type="hidden" value="' . htmlspecialchars($fileList, ENT_QUOTES) . '"';
                 
@@ -270,6 +330,7 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
                     }
 
                 if (!empty($pdfList)) {
+                    $pdfList = implode(',', $pdfFiles);
                     $inputHtml .= ' data-pdf-src="' . htmlspecialchars(Uri::root() . $pdfList, ENT_QUOTES) . '"';
                     $inputHtml .= ' data-pdf-path="' . htmlspecialchars(Uri::root(). $pdfFolder, ENT_QUOTES) . '"';
                     if ($debug_mode == true){
@@ -296,6 +357,9 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
         
                 $inputHtml .= '>';
                 $article->text .= $inputHtml;
+            }
+            else{
+                 $article->text .= "<p class='alert alert-danger'>Keine Bilddatein in diesem Ordner '/images/stpageflip/" . trim($attrs['img'], '/') . "/' gefunden</p>";
             }
         }
     }
