@@ -81,6 +81,10 @@
     border: 2px dotted black;
 }
 
+.move_over .stf__wrapper {
+      cursor: move !important;
+}
+
 .slider {
     background-color: white;
     border-radius: 20px;
@@ -165,6 +169,8 @@ display:inline-block;
 .bt-options{
     font-size: 2em;
 }
+
+
 
 
 .sound_on:before {
