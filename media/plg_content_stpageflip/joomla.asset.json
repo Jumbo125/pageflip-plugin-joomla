@@ -1,6 +1,6 @@
 {
   "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
-  "name": "plg_content_stpageflip",
+  "name": "PLG_CONTENT_STPAGEFLIP",
   "type": "plugin",
   "version": "1.0.1",
   "description": "PLG Pageflip",
@@ -9,22 +9,22 @@
     {
       "name": "pageflip_custom",
       "type": "style",
-      "uri": "plg_content_stpageflip/custom.css"
+      "uri": "custom.css"
     },
     {
       "name": "pageflip_original",
       "type": "style",
-      "uri": "plg_content_stpageflip/stPageFlip.css"
+      "uri": "stPageFlip.css"
     },
     {
-      "name": "pageflip_bootstrap.css",
+      "name": "pageflip_bootstrap",
       "type": "style",
-      "uri": "plg_content_stpageflip/bootstrap.css"
+      "uri": "bootstrap.css"
     },
     {
-      "name": "pageflip_bootstrap_ico.css",
+      "name": "pageflip_bootstrap_ico",
       "type": "style",
-      "uri": "plg_content_stpageflip/bootstrap_ico/bootstrap_icons.css"
+      "uri": "bootstrap_ico/bootstrap_icons.css"
     },
     {
       "name": "pageflip_jquery_ui_draggable",

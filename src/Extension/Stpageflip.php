@@ -13,10 +13,11 @@
  * - jQuery, jQuery UI
  */
 
-// Sicherheitscheck
-defined('_JEXEC') or die;
-
 namespace Joomla\Plugin\Content\Stpageflip\Extension;
+
+// Sicherheitscheck
+\defined('_JEXEC') or die;
+
 
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Factory;
@@ -163,7 +164,7 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
 
         // Optional Bootstrap
         if ($this->params->get('load_bootstrap', 0)) {
-            $wa->useAsset('style', 'pageflip_bootstrap.css');
+            $wa->useAsset('style', 'pageflip_bootstrap');
             if ($debug_mode) {
                 $article->text .= "<p class='alert alert-info'>bootstrap.css eingebunden</p>";
             }
@@ -175,7 +176,7 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
 
         // Optional Bootstrap Icons
         if ($this->params->get('load_bootstrap_icons', 1)) {
-            $wa->useAsset('style', 'pageflip_bootstrap_ico.css');
+            $wa->useAsset('style', 'pageflip_bootstrap_ico');
             if ($debug_mode) {
                 $article->text .= "<p class='alert alert-info'>bootstrap-icons.css eingebunden</p>";
             }
