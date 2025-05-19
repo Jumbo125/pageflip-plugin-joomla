@@ -235,10 +235,13 @@
         <filename>css/index.html</filename>
         <filename>css/bootstrap_ico/index.html</filename>
         <filename>css/bootstrap_ico/fonts/index.html</filename>
-   
-
     </files>
 
+    <media destination="plg_content_stpageflip" folder="media">
+        <folder>css</folder>
+        <folder>js</folder>
+        <folder>sounds</folder>
+    </media>
     <scriptfile>script.php</scriptfile>
    
 

@@ -151,67 +151,51 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
             return;
         }
 
-        // Assets laden nur einmal
-        $doc = Factory::getApplication()->getDocument();
-        $base = Uri::root() . 'plugins/content/stpageflip/js/';
-        $cssBase = Uri::root() . 'plugins/content/stpageflip/css/';
+     
+        $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
 
+        // Basis-Assets
+        $wa->useScript('jquery');
+        $wa->useAsset('style', 'pageflip_original');
+        $wa->useAsset('style', 'pageflip_custom');
+        $wa->useAsset('script', 'pageflip_main');
+        $wa->useAsset('script', 'pageflip_controll_pageflip');
 
-        $doc->addStyleSheet($cssBase . 'stPageFlip.css');
-        $doc->addStyleSheet($cssBase . 'custom.css');
-
-
+        // Optional Bootstrap
         if ($this->params->get('load_bootstrap', 0)) {
-            $doc->addStyleSheet($cssBase . 'bootstrap.css');
-            if ($debug_mode == true){
+            $wa->useAsset('style', 'pageflip_bootstrap.css');
+            if ($debug_mode) {
                 $article->text .= "<p class='alert alert-info'>bootstrap.css eingebunden</p>";
             }
-        }
-        else{
-              if ($debug_mode == true){
+        } else {
+            if ($debug_mode) {
                 $article->text .= "<p class='alert alert-danger'>bootstrap.css NICHT eingebunden</p>";
-              }
+            }
         }
 
+        // Optional Bootstrap Icons
         if ($this->params->get('load_bootstrap_icons', 1)) {
-            $doc->addStyleSheet($cssBase . 'bootstrap_ico/bootstrap-icons.css');
-             if ($debug_mode == true){
+            $wa->useAsset('style', 'pageflip_bootstrap_ico.css');
+            if ($debug_mode) {
                 $article->text .= "<p class='alert alert-info'>bootstrap-icons.css eingebunden</p>";
             }
-          }
-        else{
-              if ($debug_mode == true){
+        } else {
+            if ($debug_mode) {
                 $article->text .= "<p class='alert alert-danger'>bootstrap-icons.css NICHT eingebunden</p>";
-              }
-        }
-
-        if ($this->params->get('load_jquery', 0)) {
-            $doc->addScript($base . 'jquery.js', ['version' => 'auto'], ['defer' => true]);
-             if ($debug_mode == true){
-                $article->text .= "<p class='alert alert-info'>jquery.js eingebunden</p>";
             }
         }
-        else{
-              if ($debug_mode == true){
-                $article->text .= "<p class='alert alert-danger'>jquery.js NICHT eingebunden</p>";
-              }
-        }
 
+        // Optional jQuery UI
         if ($this->params->get('load_jqueryui', 1)) {
-            $doc->addScript($base . 'jquery_ui_draggable.min.js', ['version' => 'auto'], ['defer' => true]);
-               if ($debug_mode == true){
-                    $article->text .= "<p class='alert alert-info'>jquery_ui_draggable.min.js eingebunden</p>";
-                }
-        }
-        else{
-              if ($debug_mode == true){
+            $wa->useAsset('script', 'pageflip_jquery_ui_draggable');
+            if ($debug_mode) {
+                $article->text .= "<p class='alert alert-info'>jquery_ui_draggable.min.js eingebunden</p>";
+            }
+        } else {
+            if ($debug_mode) {
                 $article->text .= "<p class='alert alert-danger'>jquery_ui_draggable.min.js NICHT eingebunden</p>";
-              }
+            }
         }
-
-        $doc->addScript($base . 'panzoom.min.js', ['version' => 'auto'], ['defer' => true]);
-        $doc->addScript($base . 'page-flip.browser.modif.min.js', ['version' => 'auto'], ['defer' => true]);
-        $doc->addScript($base . 'page-flip_controll.js', ['version' => 'auto'], ['defer' => true]);
 
 
         // ------------------------------------------
