@@ -3,8 +3,8 @@
     <name>PLG_CONTENT_STPAGEFLIP</name>
     <author>Andreas Rottmann</author>
     <version>1.0.0</version>
-    <license>MIT</license>
-    <copyright>Copyright (C) 2024</copyright>
+    <license>GPL</license>
+    <copyright>Copyright (C) 2025</copyright>
 <description>
   <![CDATA[
     <h3>📘 stPageFlip Enhanced – Flipbook-Plugin für Joomla</h3>
@@ -302,4 +302,9 @@
         </fieldset>
     </fields>
 </config>
+ <updateservers>
+    <server type="extension" name="StPageFlip Update Server">
+        https://jumbo125.github.io/pageflip-plugin-joomla/stpageflip_update.xml
+    </server>
+</updateservers>
 </extension>

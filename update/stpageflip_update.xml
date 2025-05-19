@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<updates>
+    <update>
+        <name>StPageFlip</name>
+        <description>StPageFlip Plugin Update</description>
+        <element>stpageflip</element>
+        <type>plugin</type>
+        <folder>content</folder>
+        <version>1.0.1</version>
+        <infourl title="StPageFlip">https://github.com/Jumbo125/pageflip-plugin-joomla</infourl>
+        <downloads>
+            <downloadurl type="full" format="zip">
+                https://github.com/Jumbo125/pageflip-plugin-joomla/releases/download/v1.0.1/plg_content_stpageflip_v1.0.1.zip
+            </downloadurl>
+        </downloads>
+        <tags>stable</tags>
+        <maintainer>jumbo125</maintainer>
+        <maintainerurl>https://github.com/Jumbo125</maintainerurl>
+        <targetplatform name="joomla" version="4.0"/>
+    </update>
+</updates>
