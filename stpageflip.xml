@@ -304,7 +304,7 @@
 </config>
  <updateservers>
     <server type="extension" name="StPageFlip Update Server">
-        https://jumbo125.github.io/pageflip-plugin-joomla/stpageflip_update.xml
+         https://raw.githubusercontent.com/Jumbo125/pageflip-plugin-joomla/main/update/stpageflip_update.xml
     </server>
 </updateservers>
 </extension>
