@@ -243,10 +243,10 @@
 
     <!-- Backend-Konfiguration -->
    <languages folder="language">
-        <language tag="en-GB">plg_content_stpageflip.ini</language>
-        <language tag="en-GB">plg_content_stpageflip.sys.ini</language>
-        <language tag="de-DE">plg_content_stpageflip.ini</language>
-        <language tag="de-DE">plg_content_stpageflip.sys.ini</language>
+        <language tag="en-GB">en-GB.plg_content_stpageflip.ini</language>
+        <language tag="en-GB">en-GB.plg_content_stpageflip.sys.ini</language>
+        <language tag="de-DE">de-DE.plg_content_stpageflip.ini</language>
+        <language tag="de-DE">de-DE.plg_content_stpageflip.sys.ini</language>
     </languages>
 
     <config>
