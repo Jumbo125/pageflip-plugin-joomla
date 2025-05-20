@@ -9,39 +9,39 @@
     {
       "name": "pageflip_custom",
       "type": "style",
-      "uri": "custom.css"
+      "uri": "plg_content_stpageflip/custom.css"
     },
     {
       "name": "pageflip_original",
       "type": "style",
-      "uri": "stPageFlip.css"
+      "uri": "plg_content_stpageflip/stPageFlip.css"
     },
     {
       "name": "pageflip_bootstrap",
       "type": "style",
-      "uri": "bootstrap.css"
+      "uri": "plg_content_stpageflip/bootstrap.css"
     },
     {
       "name": "pageflip_bootstrap_ico",
       "type": "style",
-      "uri": "bootstrap_ico/bootstrap_icons.css"
+      "uri": "plg_content_stpageflip/bootstrap_ico/bootstrap_icons.css"
     },
     {
       "name": "pageflip_jquery_ui_draggable",
       "type": "script",
-      "uri": "jquery_ui_draggable.min.js",
+      "uri": "plg_content_stpageflip/jquery_ui_draggable.min.js",
       "dependencies": ["jquery"]
     },
     {
       "name": "pageflip_controll_pageflip",
       "type": "script",
-      "uri": "page-flip_controll.js",
+      "uri": "plg_content_stpageflip/page-flip_controll.js",
       "dependencies": ["pageflip_main"]
     },
     {
       "name": "pageflip_main",
       "type": "script",
-      "uri": "page-flip.browser.modif.min.js",
+      "uri": "plg_content_stpageflip/page-flip.browser.modif.min.js",
       "dependencies": ["jquery"]
     }
   ]
