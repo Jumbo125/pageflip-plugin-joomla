@@ -2,7 +2,7 @@
 <updates>
     <update>
         <name>StPageFlip</name>
-        <description>StPageFlip Plugin Update</description>
+        <description>StPageFlip Update</description>
         <element>stpageflip</element>
         <type>plugin</type>
         <folder>content</folder>
