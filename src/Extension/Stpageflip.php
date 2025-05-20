@@ -153,6 +153,7 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
             return;
         }
 
+        Factory::getApplication()->getLanguage()->load('plg_content_stpageflip');
 
         $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
         $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
