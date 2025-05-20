@@ -241,13 +241,19 @@
     </services>   
 
 
-    <!-- Backend-Konfiguration -->
-   <languages folder="language">
+      <!-- Frontend-Sprachen -->
+    <languages folder="language">
         <language tag="en-GB">en-GB/plg_content_stpageflip.ini</language>
-        <language tag="en-GB">en-GB/plg_content_stpageflip.sys.ini</language>
         <language tag="de-DE">de-DE/plg_content_stpageflip.ini</language>
-        <language tag="de-DE">de-DE/plg_content_stpageflip.sys.ini</language>
     </languages>
+
+    <!-- Backend-Sprachen -->
+    <administration>
+        <languages folder="language">
+            <language tag="en-GB">en-GB/plg_content_stpageflip.sys.ini</language>
+            <language tag="de-DE">de-DE/plg_content_stpageflip.sys.ini</language>
+        </languages>
+    </administration>
 
     <config>
         <fields name="params">
