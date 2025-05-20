@@ -238,14 +238,15 @@
     <!-- ServiceProvider für Joomla 4/5 -->
     <services>
         <service type="content">services/provider.php</service>
-    </services>
+    </services>   
+
 
     <!-- Backend-Konfiguration -->
-   <languages>
-        <language tag="en-GB">language/en-GB/plg_content_stpageflip.ini</language>
-        <language tag="en-GB">language/en-GB/plg_content_stpageflip.sys.ini</language>
-        <language tag="de-DE">language/de-DE/plg_content_stpageflip.ini</language>
-        <language tag="de-DE">language/de-DE/plg_content_stpageflip.sys.ini</language>
+   <languages folder="language">
+        <language tag="en-GB">language/en-GB/en-GB.plg_content_stpageflip.ini</language>
+        <language tag="en-GB">language/en-GB/en-GB.plg_content_stpageflip.sys.ini</language>
+        <language tag="de-DE">language/de-DE/de-DE.plg_content_stpageflip.ini</language>
+        <language tag="de-DE">language/de-DE/de-DE.plg_content_stpageflip.sys.ini</language>
     </languages>
 
     <config>
