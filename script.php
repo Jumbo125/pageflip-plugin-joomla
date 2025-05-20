@@ -66,7 +66,7 @@ return new class () implements InstallerScriptInterface {
     {
         $folder = JPATH_ROOT . '/images/stpageflip';
 
-        if (!Folder::exists($folder)) {
+        if (id_dir($folder)) {
             if (Folder::create($folder)) {
                 Factory::getApplication()->enqueueMessage('📁 Folder "/images/stpageflip" has been created.', 'message');
             } else {
