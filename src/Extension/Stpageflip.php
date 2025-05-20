@@ -26,7 +26,6 @@ use Joomla\Event\Event;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Event\SubscriberInterface;
 use Joomla\CMS\Language\Text;
-use Joomla\Filesystem\Folder;
 
 class Stpageflip extends CMSPlugin implements SubscriberInterface
 {
@@ -281,7 +280,7 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
                         $outputPrefix = 'seite_';         // Präfix für WebP-Dateien
                         $pdfPath =   $imgFolder . '/' . $filename;
 
-                        if (!file_exists($pdfPath)) {
+                        if (is_dir($pdfPath)) {
                             $article->text .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_PDF_NOT_FOUND') . ": " .  $pdfPath . "</p>";
                         } else {
                             try {
