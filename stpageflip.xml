@@ -241,60 +241,62 @@
     </services>
 
     <!-- Backend-Konfiguration -->
+   <languages>
+        <language tag="en-GB">language/en-GB/en-GB.plg_content_stpageflip.ini</language>
+        <language tag="de-DE">language/de-DE/de-DE.plg_content_stpageflip.ini</language>
+    </languages>
+
     <config>
-    <fields name="params">
-        <fieldset name="basic" label="Grundeinstellungen">
-        <field
-            name="info_note"
-            type="spacer"
-            label="Hinweis"
-            description="Legen Sie Ihre Bilder in /images/stpageflip/ ab. Im Shortcode verwenden Sie dann. Wenn kein jQuery und kein Bootsrpan eingebunden ist, bitte folgende script mit Ja einbinden">
-        </field>
-            <field name="load_jquery" type="radio" default="0"
-                   label="jQuery laden?"
-                   description="Soll jQuery vom Plugin geladen werden (nur wenn nicht bereits im Template enthalten)?">
-                <option value="1">Ja</option>
-                <option value="0">Nein</option>
-            </field>
+        <fields name="params">
+            <fieldset name="basic" label="PLG_CONTENT_STPAGEFLIP_FIELDSET_BASIC">
+                <field name="info_note" type="spacer"
+                       label="PLG_CONTENT_STPAGEFLIP_INFO_LABEL"
+                       description="PLG_CONTENT_STPAGEFLIP_INFO_DESC" />
 
-            <field name="load_jqueryui" type="radio" default="1"
-                   label="jQuery UI laden?"
-                   description="Soll jQuery UI Draggable vom Plugin geladen werden?">
-                <option value="1">Ja</option>
-                <option value="0">Nein</option>
-            </field>
+                <field name="load_jquery" type="radio" default="0"
+                       label="PLG_CONTENT_STPAGEFLIP_LOAD_JQUERY_LABEL"
+                       description="PLG_CONTENT_STPAGEFLIP_LOAD_JQUERY_DESC">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
 
-            <field name="load_bootstrap" type="radio" default="0"
-                label="Bootstrap CSS laden?"
-                description="Soll die Datei bootstrap.css vom Plugin eingebunden werden?">
-                <option value="1">Ja</option>
-                <option value="0">Nein</option>
-            </field>
+                <field name="load_jqueryui" type="radio" default="1"
+                       label="PLG_CONTENT_STPAGEFLIP_LOAD_JQUERYUI_LABEL"
+                       description="PLG_CONTENT_STPAGEFLIP_LOAD_JQUERYUI_DESC">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
 
-            <field name="load_bootstrap_icons" type="radio" default="1"
-                label="Bootstrap Icons laden?"
-                description="Soll die Datei bootstrap-icons.css vom Plugin eingebunden werden?">
-                <option value="1">Ja</option>
-                <option value="0">Nein</option>
-            </field>
+                <field name="load_bootstrap" type="radio" default="0"
+                       label="PLG_CONTENT_STPAGEFLIP_LOAD_BOOTSTRAP_LABEL"
+                       description="PLG_CONTENT_STPAGEFLIP_LOAD_BOOTSTRAP_DESC">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
 
-            <field name="create_img" type="radio" default="0"
-              label="Bilder automatisch aus PDF generieren"
-              description="Sollen Bilder automatisch aus PDF generiert werden?">
-              <option value="1">Ja</option>
-              <option value="0">Nein</option>
-            </field>
+                <field name="load_bootstrap_icons" type="radio" default="1"
+                       label="PLG_CONTENT_STPAGEFLIP_LOAD_ICONS_LABEL"
+                       description="PLG_CONTENT_STPAGEFLIP_LOAD_ICONS_DESC">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
 
-            <field name="debug_mode" type="radio" default="0"
-                label="Debug-Modus aktivieren?"
-                description="Soll der Debug-Modus des Plugins aktiviert werden?">
-              <option value="1">Ja</option>
-              <option value="0">Nein</option>
-          </field>
+                <field name="create_img" type="radio" default="0"
+                       label="PLG_CONTENT_STPAGEFLIP_CREATE_IMG_LABEL"
+                       description="PLG_CONTENT_STPAGEFLIP_CREATE_IMG_DESC">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
 
-        </fieldset>
-    </fields>
-</config>
+                <field name="debug_mode" type="radio" default="0"
+                       label="PLG_CONTENT_STPAGEFLIP_DEBUG_LABEL"
+                       description="PLG_CONTENT_STPAGEFLIP_DEBUG_DESC">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+            </fieldset>
+        </fields>
+    </config>
  <updateservers>
     <server type="extension" name="StPageFlip Update Server">
          https://raw.githubusercontent.com/Jumbo125/pageflip-plugin-joomla/main/update/stpageflip_update.xml
