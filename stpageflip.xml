@@ -2,6 +2,10 @@
 <extension type="plugin" group="content" method="upgrade" version="4.0">
     <name>PLG_CONTENT_STPAGEFLIP</name>
     <author>Andreas Rottmann</author>
+    <creationDate></creationDate>
+    <authorEmail></authorEmail>
+    <authorUrl></authorUrl>
+    <services> </services>
     <version>1.0.0</version>
     <license>GPL</license>
     <copyright>Copyright (C) 2025</copyright>
