@@ -224,6 +224,7 @@
     <files>
         <folder plugin="stpageflip">services</folder>
         <folder>src</folder>
+        <folder>language</folder>
     </files>
 
     <media destination="plg_content_stpageflip" folder="media">
@@ -297,6 +298,11 @@
                     <option value="1">JYES</option>
                     <option value="0">JNO</option>
                 </field>
+                <field name="readme" type="iframe"
+                  label="Documentation"
+                  description="Full plugin usage and examples"
+                  src="media/plg_content_stpageflip/README.html"
+                  height="600px" />
             </fieldset>
         </fields>
     </config>
