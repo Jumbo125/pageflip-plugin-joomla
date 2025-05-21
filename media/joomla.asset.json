@@ -24,7 +24,7 @@
     {
       "name": "pageflip_bootstrap_ico",
       "type": "style",
-      "uri": "bootstrap_ico/bootstrap-icons.css"
+      "uri": "plg_content_stpageflip/bootstrap_ico/bootstrap-icons.css"
     },
     {
       "name": "pageflip_jquery_ui_draggable",
