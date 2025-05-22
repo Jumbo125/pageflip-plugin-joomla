@@ -103,7 +103,7 @@ function check_current_panzoom(buch_id){
           });
         }
 
-
+console.log(current + " + " + default_panzoom_zoom);
     if (current == default_panzoom_zoom){
       $controll_leiste.find(".bt-icon-zoom-standard").addClass("pdf_control_none");
       return true;
@@ -984,8 +984,14 @@ function next_pdf(id) {
 
 
 function init_panzoom_if_needed(buch_id) {
+  if (!PageFlipRegistry[buch_id]) {
+    console.warn("PageFlipRegistry für", buch_id, "nicht vorhanden → initialisiere");
+    PageFlipRegistry[buch_id] = {};
+  }
+
   const $panzoom_wrapper = jQuery("#" + buch_id).find(".stf__wrapper");
-  const panzoom_wrapper_elem = $panzoom_wrapper.get(0); // echtes DOM-Element holen
+  console.log("Gefundene Wrapper:", $panzoom_wrapper.length);
+  const panzoom_wrapper_elem = $panzoom_wrapper.get(0);
 
   if (!panzoom_wrapper_elem) {
     console.warn("Zoom-Container nicht gefunden für:", buch_id);
@@ -993,36 +999,39 @@ function init_panzoom_if_needed(buch_id) {
   }
 
   if (!PageFlipRegistry[buch_id].panzoom) {
+    console.log("Panzoom wird erstellt für:", buch_id);
     const panzoom = Panzoom(panzoom_wrapper_elem, {
       maxScale: 5,
       minScale: 0.2,
       contain: false,
-       disablePan: true // ← wichtig: verhindert unbeabsichtigtes Draggen
+      disablePan: true
     });
 
-    // Optional: anfängliche Skalierung setzen, wenn nötig
     panzoom.zoom(default_panzoom_zoom, { animate: false });
 
     PageFlipRegistry[buch_id].panzoom = panzoom;
     PageFlipRegistry[buch_id].originalScale = default_panzoom_zoom;
+  } else {
+    console.log("Panzoom bereits vorhanden für:", buch_id);
   }
 }
+
 
 
 function zoom_in_pdf(buch_id, new_zoom = false) {
   init_panzoom_if_needed(buch_id);
 
-  const panzoom = PageFlipRegistry[buch_id].panzoom;
-  if (!panzoom) return;
+  setTimeout(() => {
+    const panzoom = PageFlipRegistry[buch_id].panzoom;
+    if (!panzoom) return;
 
-  const current = panzoom.getScale();
-  if (new_zoom == false) {
-    next = Math.min(current + 0.1, 5);
-  }
-  else {
-    next = new_zoom;
-  }
-  panzoom.zoom(next, { animate: true });
+    const current = panzoom.getScale();
+    const next = new_zoom === false ? Math.min(current + 0.1, 5) : new_zoom;
+    panzoom.zoom(next, { animate: true });
+    setTimeout(() => {
+      check_current_panzoom(buch_id);
+    },50);
+  }, 50);
 }
 
 function zoom_out_pdf(buch_id) {
@@ -1037,6 +1046,9 @@ function zoom_out_pdf(buch_id) {
     return;
   }
   panzoom.zoom(next, { animate: true });
+  setTimeout(() => {
+      check_current_panzoom(buch_id);
+    },50);
 }
 
 
@@ -1047,6 +1059,9 @@ function zoom_reset_pdf(buch_id) {
   entry.panzoom.reset({
     animate: true
   });
+  setTimeout(() => {
+      check_current_panzoom(buch_id);
+    },50);
 
   jQuery("#" + buch_id).attr("data-zoomed", "false");
 
@@ -1305,7 +1320,6 @@ jQuery(document).ready(function () {
   // Zoom-in Button
   jQuery(document).on("click", ".bt-options .zoom-in", function () {
     const id = jQuery(this).attr("data-pdf-book").replace("#", "");
-    check_current_panzoom(id);
     reflect_display_hide(id);
     zoom_in_pdf(id);
   });
@@ -1313,7 +1327,6 @@ jQuery(document).ready(function () {
   // Zoom-out Button
   jQuery(document).on("click", ".bt-options .zoom-out", function () {
     const id = jQuery(this).attr("data-pdf-book").replace("#", "");
-    check_current_panzoom(id);
     reflect_display_hide(id);
     zoom_out_pdf(id);
   });
