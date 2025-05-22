@@ -166,6 +166,7 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
         $wa->useAsset('style', 'pageflip_custom');
         $wa->useAsset('script', 'pageflip_main');
         $wa->useAsset('script', 'pageflip_controll_pageflip');
+        $wa->useAsset('script', 'pageflip_controll_panzoom');
 
         // Optional Bootstrap
         if ($this->params->get('load_bootstrap', 0)) {
