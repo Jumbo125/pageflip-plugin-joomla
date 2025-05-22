@@ -910,7 +910,7 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
 
     //vor dem umblättern
   pageFlip_Instanz.on("beforeFlip", (e) => {
-      const mp3_path = Joomla.getOptions('system.paths').root + "media/plg_content_stpageflip/sounds/turn.mp3";
+      const mp3_path = Joomla.getOptions('system.paths').root + "/media/plg_content_stpageflip/sounds/turn.mp3";
       const flipSound = new Audio(mp3_path);
     if (PageFlipRegistry[buch_id.replace("#", "")].sound == true && userInteracted == true) {
         flipSound.currentTime = 0;

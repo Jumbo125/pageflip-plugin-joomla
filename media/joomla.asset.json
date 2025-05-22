@@ -43,12 +43,11 @@
       "type": "script",
       "uri": "plg_content_stpageflip/page-flip.browser.modif.min.js",
       "dependencies": ["jquery"]
-    }
+    },
      {
       "name": "pageflip_controll_panzoom",
       "type": "script",
-      "uri": "plg_content_stpageflip/panzoom.min.js",
-      "dependencies": ["jquery"]
+      "uri": "plg_content_stpageflip/panzoom.min.js"
     }
   ]
 }
