@@ -165,8 +165,7 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
         $wa->useAsset('style', 'pageflip_original');
         $wa->useAsset('style', 'pageflip_custom');
         $wa->useAsset('script', 'pageflip_main');
-        $wa->useAsset('script', 'pageflip_controll_pageflip');
-        $wa->useAsset('script', 'pageflip_controll_panzoom');
+       $wa->useAsset('script', 'pageflip_controll_panzoom');
 
         // Optional Bootstrap
         if ($this->params->get('load_bootstrap', 0)) {
@@ -203,6 +202,8 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
                 $article->text .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_JQUERYUI_NOT_LOADED') . "</p>";
             }
         }
+
+        $wa->useAsset('script', 'pageflip_controll_pageflip');
 
 
         // ------------------------------------------

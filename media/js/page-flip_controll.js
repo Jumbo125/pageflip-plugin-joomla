@@ -126,7 +126,6 @@ function check_if_move(buch_id){
 //------------------------
 jQuery(document).ready(function () {
   
-  
   jQuery("body").find(".flip-book").each(function () {
     const id = jQuery(this).attr('id');
     if (id) {
@@ -846,7 +845,7 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
     let styleContent = "";
 
     if (color) {
-      styleContent += `#${idSafe} i.bi { color: ${color} !important; }\n`;
+      styleContent += `#${idSafe} i.bi:not(.move_bt_active, .bi-fullscreen-exit) { color: ${color} !important;  }\n`;
     }
 
     if (color_hover) {
@@ -1186,28 +1185,7 @@ function fullscreen_pdf(id) {
 }
 
 
-function move_back(id) {
-  // Reset position
-  const pdf_left = jQuery(id).attr("data-original-left");
-  const pdf_top = jQuery(id).attr("data-original-top");
-  jQuery(id).draggable({ disabled: true });
-  const $wrapper = jQuery(id).find(".stf__wrapper");
-  if ($wrapper.length > 0) {
-    $wrapper.css({
-      cursor: 'default'
-    });
-  }
- 
-  jQuery(id).css("left", pdf_left);
-  jQuery(id).css("top", pdf_top);
-  jQuery(id).removeClass("ui-draggable ui-draggable-handle");
-   const panzoomInstance = PageFlipRegistry[id.replace("#","")]?.panzoom;
 
-  if (panzoomInstance) {
-    panzoomInstance.pan(0, 0);
-  }
-
-}
 
 
 function reflect_display_hide(id) {
@@ -1221,178 +1199,187 @@ function reflect_display_show(id) {
   });
 }
 
-function move_pdf(id) {
-  //falls zur zeit draggable aktiv
-  if (jQuery(id).hasClass("move_over") == true) {
-    reflect_display_show(id);
-    jQuery(id).removeClass("ui-draggable ui-draggable-handle ui-draggable-disabled"); 
-    jQuery(id).removeClass("move_over");
-    jQuery(id).parent().parent().parent().find(".move").removeClass("move_bt_active");
-  }
-  else {
-    jQuery(id).draggable({ disabled: false });
-    reflect_display_hide(id);
-    jQuery(id).addClass("move_over");
-    jQuery(id).parent().parent().parent().find(".move").addClass("move_bt_active");
-  }
-}
+jQuery(function($) {
+  window.move_pdf = function(id, $btn) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-jQuery(document).ready(function () {
-
-  //click auf buch
-  jQuery(document).on('click', 'ui-flipbook', function () {
-
-    if (jQuery(e.target).closest('.move_over').length > 0) {
-      // Kein flip, wenn in einem Element mit .move_over geklickt wurde
-      return;
+    if ($(id).hasClass("move_over")) {
+      reflect_display_show(id);
+      $(id).removeClass("ui-draggable ui-draggable-handle ui-draggable-disabled");
+      $(id).removeClass("move_over");
+      $btn.removeClass("move_bt_active");
+    } else {
+      $(id).draggable({ disabled: false });
+      reflect_display_hide(id);
+      $(id).addClass("move_over");
+      $btn.addClass("move_bt_active");
     }
-    else {
-      // Flip ausführen
+  };
+});
 
+jQuery(function($) {
+  window.move_back = function(id, $btn_move) { 
+    // Reset position
+    const pdf_left = $(id).attr("data-original-left");
+    const pdf_top = $(id).attr("data-original-top");
+
+    $(id).draggable({ disabled: true });
+    const $wrapper = $(id).find(".stf__wrapper");
+    if ($wrapper.length > 0) {
+      $wrapper.css({ cursor: 'default' });
+    }
+
+    $(id).css({
+      left: pdf_left,
+      top: pdf_top
+    });
+
+    $(id).removeClass("ui-draggable ui-draggable-handle");
+
+    const panzoomInstance = PageFlipRegistry[id.replace("#", "")]?.panzoom;
+    if (panzoomInstance) {
+      panzoomInstance.pan(0, 0);
+    }
+      $btn_move.removeClass("move_bt_active");
+      $(id).removeClass("move_over");
+  };
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+jQuery(function($) {
+
+  // Klick auf Buch
+  $(document).on('click', 'ui-flipbook', function (e) {
+    if ($(e.target).closest('.move_over').length > 0) {
+      return;
+    } else {
+      // Flip ausführen
     }
   });
-
-
 
   // Slider-Eingabe
-  jQuery(document).on('input', '.pdf-book-slider', function () {
-    const set_page = jQuery(this).val();
-    const id = jQuery(this).attr("data-pdf-book").replace("#", "");
+  $(document).on('input', '.pdf-book-slider', function () {
+    const set_page = $(this).val();
+    const id = $(this).attr("data-pdf-book").replace("#", "");
     go_to_page(id, set_page);
-
   });
 
-
-
   // Home Button
-  jQuery(document).on("click", ".bt-options .home", function () {
-    const id = jQuery(this).attr("data-pdf-book").replace("#", "");
+  $(document).on("click", ".bt-options .home", function () {
+    const id = $(this).attr("data-pdf-book").replace("#", "");
     home_pdf(id);
   });
 
   // Download Button
-  jQuery(document).on("click", ".bt-options .pdf-download", function () {
-    const pfad = jQuery(this).attr("href");
+  $(document).on("click", ".bt-options .pdf-download", function () {
+    const pfad = $(this).attr("href");
     download_pdf(pfad);
   });
 
-
   // Prev Button
-  jQuery(document).on("click", ".bt-options .prev,  .prev", function () {
-    const id = jQuery(this).attr("data-pdf-book").replace("#", "");
+  $(document).on("click", ".bt-options .prev,  .prev", function () {
+    const id = $(this).attr("data-pdf-book").replace("#", "");
     prev_pdf(id);
   });
 
   // Next Button
-  jQuery(document).on("click", ".bt-options .next, .next", function () {
-    const id = jQuery(this).attr("data-pdf-book").replace("#", "");
+  $(document).on("click", ".bt-options .next, .next", function () {
+    const id = $(this).attr("data-pdf-book").replace("#", "");
     next_pdf(id);
   });
 
   // Zoom-in Button
-  jQuery(document).on("click", ".bt-options .zoom-in", function () {
-    const id = jQuery(this).attr("data-pdf-book").replace("#", "");
+  $(document).on("click", ".bt-options .zoom-in", function () {
+    const id = $(this).attr("data-pdf-book").replace("#", "");
     reflect_display_hide(id);
     zoom_in_pdf(id);
   });
 
   // Zoom-out Button
-  jQuery(document).on("click", ".bt-options .zoom-out", function () {
-    const id = jQuery(this).attr("data-pdf-book").replace("#", "");
+  $(document).on("click", ".bt-options .zoom-out", function () {
+    const id = $(this).attr("data-pdf-book").replace("#", "");
     reflect_display_hide(id);
     zoom_out_pdf(id);
   });
 
   // Zoom-default Button
-  jQuery(document).on("click", ".bt-options .zoom-default", function () {
-    const id = jQuery(this).attr("data-pdf-book").replace("#", "");
-    jQuery(this).closest(".bt-icon-zoom-standard").addClass("pdf_control_none");
+  $(document).on("click", ".bt-options .zoom-default", function () {
+    const id = $(this).attr("data-pdf-book").replace("#", "");
+    $(this).closest(".bt-icon-zoom-standard").addClass("pdf_control_none");
     reflect_display_show(id);
     zoom_reset_pdf(id);
   });
 
-
   // Fullscreen Button
-  jQuery(document).on("click", ".bt-options .fullscreen", function () {
-    const btn = jQuery(this);
+  $(document).on("click", ".bt-options .fullscreen", function () {
+    const btn = $(this);
     const id = btn.closest(".bt-options").attr("data-book-id");
-
     fullscreen_pdf(id);
-
   });
 
   document.addEventListener("fullscreenchange", function () {
-  if (!document.fullscreenElement) {
-    jQuery(".ui-flipbook[data-fullscreen-aktiv='true']").each(function () {
-      const id = "#" + jQuery(this).attr("id");
-      console.log("Fullscreen beendet für:", id);
+    if (!document.fullscreenElement) {
+      $(".ui-flipbook[data-fullscreen-aktiv='true']").each(function () {
+        const id = "#" + $(this).attr("id");
+        console.log("Fullscreen beendet für:", id);
 
-      // Nur das Beenden behandeln, nicht erneut aktivieren!
-      jQuery(this).attr("data-fullscreen-aktiv", "false");
-      jQuery(this).removeClass("fullscreen-enabled").addClass("fullscreen-disabled");
+        $(this).attr("data-fullscreen-aktiv", "false");
+        $(this).removeClass("fullscreen-enabled").addClass("fullscreen-disabled");
 
-      const $container = jQuery(this).closest(".pdf_book_fullscreen");
-      const $controls = $container.find(".controls").length > 0
-        ? $container.find(".controls")
-        : $container.next(".controls");
+        const $container = $(this).closest(".pdf_book_fullscreen");
+        const $controls = $container.find(".controls").length > 0
+          ? $container.find(".controls")
+          : $container.next(".controls");
 
-      updateFullscreenButton($controls, false);
-      if (typeof reflect_display_show === "function") {
-        reflect_display_show(id);
-      }
-      $container.after($controls);
-      zoom_reset_pdf(id.replace("#", ""));
-    });
-  }
-});
-
+        updateFullscreenButton($controls, false);
+        if (typeof reflect_display_show === "function") {
+          reflect_display_show(id);
+        }
+        $container.after($controls);
+        zoom_reset_pdf(id.replace("#", ""));
+      });
+    }
+  });
 
   // Draggable aktivieren
-  jQuery(document).on("click", ".bt-options .move", function () {
-    const id = jQuery(this).closest(".bt-options").attr("data-book-id");
-    move_pdf(id);
+  $(document).on("click", ".bt-options .move", function () {
+    const $btn = $(this);
+    const id = $btn.closest(".bt-options").attr("data-book-id");
+    $(this).addClass();
+    move_pdf(id,$btn);
   });
 
   // Draggable Reset
-  jQuery(document).on("click", ".bt-options .back", function () {
-    const id = jQuery(this).closest(".bt-options").attr("data-book-id");
-    move_back(id);
+  $(document).on("click", ".bt-options .back", function () {
+    const $btn = $(this);
+    const $btn_move = $btn.closest(".bt-options").find("i.move");
+    const id = $btn.closest(".bt-options").attr("data-book-id");
+    move_back(id, $btn_move);
     reflect_display_show(id);
   });
 
-  //sound
-  jQuery(document).on("click", ".bt-options .bt-icon-sound", function () {
-    const $icon = jQuery(this);
-
-    // Wechsle Klassen
+  // Sound-Toggle
+  $(document).on("click", ".bt-options .bt-icon-sound", function () {
+    const $icon = $(this);
     const isOn = $icon.hasClass("sound_on");
 
     if (isOn) {
@@ -1401,8 +1388,7 @@ jQuery(document).ready(function () {
       $icon.removeClass("sound_off").addClass("sound_on");
     }
 
-    // Zugriff auf zugehörige PageFlip-Instanz (angenommen ID ist am Icon-DOM oder im Kontext)
-    const buch_id = jQuery(this).closest(".bt-options").attr("data-book-id").replace("#", "");
+    const buch_id = $(this).closest(".bt-options").attr("data-book-id").replace("#", "");
     const instance = PageFlipRegistry?.[buch_id];
 
     if (instance) {
@@ -1411,13 +1397,11 @@ jQuery(document).ready(function () {
     }
   });
 
-
-
   let mouse_over = false;
   let mouse_over_id = "";
 
-  jQuery(document).on('mouseenter mouseleave', '.ui-flipbook', function (e) {
-    const $flipbook = jQuery(this);
+  $(document).on('mouseenter mouseleave', '.ui-flipbook', function (e) {
+    const $flipbook = $(this);
     const $controls = $flipbook.closest('.pdf_book_fullscreen').next('.controls');
     if (e.type === 'mouseenter' && $controls.attr("data-mousewheel-scroll") === "true") {
       mouse_over = true;
@@ -1428,55 +1412,40 @@ jQuery(document).ready(function () {
     }
   });
 
-
-  // jQuery für mouseenter / mouseleave
-  jQuery(document).on('mouseenter mouseleave', '.ui-flipbook', function (e) {
+  $(document).on('mouseenter mouseleave', '.ui-flipbook', function (e) {
     mouse_over = (e.type === 'mouseenter');
-    mouse_over_id = mouse_over ? jQuery(this).attr("id") : "";
+    mouse_over_id = mouse_over ? $(this).attr("id") : "";
   });
 
+  if (detectOS() !== "iOS" && detectOS() !== "Android") {
+    window.addEventListener('wheel', function (e) {
+      if (!mouse_over) return;
 
-if (detectOS() !== "iOS" && detectOS() !== "Android") {
-  // Vanilla JS für wheel-Event
-  window.addEventListener('wheel', function (e) {
+      if (e.deltaY > 0) {
+        prev_pdf(mouse_over_id);
+        e.preventDefault();
+      } else {
+        next_pdf(mouse_over_id);
+        e.preventDefault();
+      }
+    }, { passive: false });
+  }
 
-    if (!mouse_over) return; // Nur wenn Maus über dem Buch ist
-    const id = mouse_over_id;
-
-
-    if (e.deltaY > 0) {
-      // Scroll down → nächste Seite
-      prev_pdf(mouse_over_id);
-      e.preventDefault(); // jetzt erlaubt!
-
-    } else {
-      next_pdf(mouse_over_id);
-      e.preventDefault(); // jetzt erlaubt!
-    }
-  }, { passive: false }); // **WICHTIG**
-
-}// iOS: kein wheel
-
-
-
-  jQuery('.ui-flipbook').on('dblclick', function (e) {
-
-    const $flipbook = jQuery(this);
+  $('.ui-flipbook').on('dblclick', function (e) {
+    const $flipbook = $(this);
     const id = $flipbook.attr("id");
 
     init_panzoom_if_needed(id);
 
     if (!id || !PageFlipRegistry[id] || !PageFlipRegistry[id].panzoom) {
-        show_debug_msg("⚠️ Kein Panzoom-Instance gefunden für:", id);
+      show_debug_msg("⚠️ Kein Panzoom-Instance gefunden für:", id);
       return;
     }
 
     const elem = $flipbook.get(0);
-    show_debug_msg("Flipbook-id: " + id);
     const rect = elem.getBoundingClientRect();
     let offsetX = e.clientX - rect.left;
     let offsetY = e.clientY - rect.top;
-
 
     const panzoomInstance = PageFlipRegistry[id].panzoom;
     if (!panzoomInstance) return;
@@ -1488,34 +1457,25 @@ if (detectOS() !== "iOS" && detectOS() !== "Android") {
       zoom_reset_pdf(id.replace("#", ""));
       $flipbook.attr("data-dbl-zoomed", "false");
     } else {
-
       const panzoomElem = PageFlipRegistry[id].panzoom.getElem?.() || this;
       const rect = panzoomElem.getBoundingClientRect();
       const offsetX = e.clientX - rect.left;
       const offsetY = e.clientY - rect.top;
 
       const scale = 1.5;
-      const panzoomInstance = PageFlipRegistry[id].panzoom;
-
       const panX = (rect.width / 2 - offsetX) * (scale - 1);
       const panY = (rect.height / 2 - offsetY) * (scale - 1);
 
       panzoomInstance.reset({ animate: false });
 
       setTimeout(() => {
-        panzoomInstance.zoom(scale, { animate: false }); // keine Animation dazwischen
-
-        // Danach korrekt pannen
+        panzoomInstance.zoom(scale, { animate: false });
         panzoomInstance.pan(panX, panY, { animate: true });
-
         show_debug_msg("✅ Zoom + Pan abgeschlossen:", { panX, panY });
       }, 20);
-      $flipbook.attr("data-dbl-zoomed", "true");
 
+      $flipbook.attr("data-dbl-zoomed", "true");
     }
   });
 
-
-}); //document.ready(function) ende
-
-
+});
