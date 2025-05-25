@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="https://github.com/Jumbo125/st-pageflip-enhanced/blob/main/a080723b-e63e-49d4-a9e1-f0487cf1188b.png" alt="st-pageflip-enhanced" width="300">
+</p>
 # 📘 stPageFlip Enhanced – Flipbook-Plugin für Joomla
 
 Dieses Plugin integriert einen realistischen, blätterbaren Buch-Viewer in Joomla-Artikel – basierend auf der stPageFlip-Bibliothek – mit erweiterter Benutzeroberfläche, Zoom, Vollbild, Ton und mehr.
