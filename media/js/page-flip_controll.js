@@ -170,7 +170,7 @@ const getAttrValue = ($container, key, fallback) => {
 
 
 
-function controlls_for_book(ID, data_height, data_width, aspect_ratio, din_format, single_center, mousewheel_scroll, density, slider, bt_options, home, download, prev, next, zoom_in, zoom_out, zoom_default, zoom_dblclick, fullscreen, reflection, tooltip, sound, transform, inside_button, color, color_hover) {
+function controlls_for_book(ID, data_height, data_width, aspect_ratio, din_format, single_center, mousewheel_scroll, density, slider, bt_options, home, download, prev, next, zoom_in, zoom_out, zoom_default, zoom_dblclick, fullscreen, reflection, tooltip, sound, mute_sound, transform, inside_button, color, color_hover) {
 
 show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
 
@@ -181,68 +181,67 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
 <!-- controls -->
 <div class="controls" data-mousewheel-scroll="false">
   <div class="slider">
-    <p>
+    <label>
       Seite <span class="current_page"></span> von <span class="all_sites"></span><br />
-      Umblättern:<br />
+      Umblättern:</label><br />
       <input type="range" class="pdf-book-slider" data-pdf-book="pdf_id" min="1" max_seitanzahl="" step="1" value="1">
-    </p>
+    
   </div>
 
   <div class="bt-options">
-    <a class="bt-icon-home" title="Zur ersten Seite">
+    <button  type="button" class="btn btn-lg bt-icon-home home" data-pdf-book="pdf_id" title="Zur ersten Seite">
       <abbr title="Erste Seite"></abbr>
-      <i class="bi bi-house home" data-pdf-book="pdf_id"></i>
-    </a>
+      <i class="bi bi-house "></i>
+    </button>
 
-    <a class="bt-icon-download" title="PDF speichern" download_src>
+    <button  type="button"class="btn btn-lg bt-icon-download pdf-download" title="PDF speichern" data-pdf-book="pdf_id">
       <abbr title="Download PDF"></abbr>
-      <i class="bi bi-download pdf-download" data-pdf-book="pdf_id"></i>
-    </a>
+      <i class="bi bi-download" ></i>
+    </button>
 
-    <a class="bt-icon-prev" title="zurück">
+    <button  type="button"class="btn btn-lg bt-icon-prev  prev" data-pdf-book="pdf_id" title="zurück">
       <abbr title="Zurück"></abbr>
-      <i class="bi bi-arrow-left-circle prev" data-pdf-book="pdf_id"></i>
-    </a>
+      <i class="bi bi-arrow-left-circle" ></i>
+    </button>
 
-    <a class="bt-icon-next" title="weiter">
+    <button  type="button"class="btn btn-lg bt-icon-next next" data-pdf-book="pdf_id" title="weiter">
       <abbr title="Weiter"></abbr>
-      <i class="bi bi-arrow-right-circle next" data-pdf-book="pdf_id"></i>
-    </a>
+      <i class="bi bi-arrow-right-circle" ></i>
+    </button>
 
-    <a class="bt-icon-zoom-in" title="zoom-plus">
+    <button  type="button"class="btn btn-lg bt-icon-zoom-in zoom-in" data-pdf-book="pdf_id" title="zoom-plus">
       <abbr title="Zoom +"></abbr>
-      <i class="bi bi-zoom-in zoom-in" data-pdf-book="pdf_id"></i>
-    </a>
+      <i class="bi bi-zoom-in " ></i>
+    </button>
 
-    <a class="bt-icon-zoom-out" title="zoom-minus">
+    <button  type="button"class="btn btn-lg bt-icon-zoom-out zoom-out"  data-pdf-book="pdf_id" title="zoom-minus">
       <abbr title="Zoom -"></abbr>
-      <i class="bi bi-zoom-out zoom-out" data-pdf-book="pdf_id"></i>
-    </a>
+      <i class="bi bi-zoom-out "></i>
+    </button>
 
-    <a class="bt-icon-zoom-standard" title="zoom-normal">
+    <button  type="button"class="btn btn-lg bt-icon-zoom-standard zoom-default" data-pdf-book="pdf_id" title="zoom-normal">
       <abbr title="Standardgröße"></abbr>
-      <i class="bi bi-eyeglasses zoom-default" data-pdf-book="pdf_id"></i>
-    </a>
+      <i class="bi bi-eyeglasses" ></i>
+    </button>
 
-    <a class="bt-icon-move" title="Verschieben">
+    <button  type="button"class="btn btn-lg bt-icon-move move" data-pdf-book="pdf_id"  title="Verschieben">
       <abbr title="Bewegen"></abbr>
-      <i class="bi bi-arrows-move move" data-pdf-book="pdf_id"></i>
-    </a>
+      <i class="bi bi-arrows-move " ></i>
+    </button>
 
-    <a class="bt-icon-back" title="Reset">
+    <button  type="button"class="btn btn-lg bt-icon-back back" data-pdf-book="pdf_id" title="Reset">
       <abbr title="Standard Platzierung"></abbr>
-      <i class="bi bi-bootstrap-reboot back" data-pdf-book="pdf_id"></i>
-    </a>
+      <i class="bi bi-bootstrap-reboot" ></i>
+    </button>
 
-    <a class="bt-icon-fullscreen" title="Vollbild">
+    <button  type="button"class="btn btn-lg bt-icon-fullscreen fullscreen" title="Vollbild" data-pdf-book="pdf_id">
       <abbr title="Vollbild"></abbr>
-      <i class="bi bi-fullscreen fullscreen" data-pdf-book="pdf_id"></i>
-    </a>
+      <i class="bi bi-fullscreen" ></i>
+    </button>
 
-     <a class="bt-icon-sound" title="Sound">
+     <button  type="button"class="btn btn-lg bt-icon-sound" title="Sound">
       <abbr title="Sound"></abbr>
-     
-    </a>
+    </button>
   </div>
 </div>
 
@@ -488,10 +487,18 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
       //passenden slider suchen
       jQuery(".slider").each(function () {
        show_debug_msg("Slider gefunden und zugeordnert: " + jQuery(this).attr("data-book-id"));
-        if (jQuery(this).attr("data-book-id") == "#" + $buch.attr("id")) {
-          $controll_leiste = jQuery(this).parent();
+       const $slider = jQuery(this);
+        if ($slider.attr("data-book-id") == "#" + $buch.attr("id")) {
+          //label zuweisen
+          $slider.children("input").attr("id", "slider_" + $buch.attr("id"));
+          $slider.children("label").attr("for", "slider_" + $buch.attr("id"));
+          
+          //constrollleiste zuweisen
+          $controll_leiste = $slider.parent();
         }
       });
+
+
       if (jQuery(".slider").length <= 0 ){
         show_debug_msg("kein Slider gefunden");
       }
@@ -729,6 +736,7 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
     sound = sound !== undefined ? sound : getAttrBool($container, "sound", false);
     color = color !== undefined ? color : getAttrValue($container, "color", null);
     color_hover = color_hover !== undefined ? color_hover : getAttrValue($container, "color-hover", null);
+    mute_sound = mute_sound !== undefined ? mute_sound : getAttrBool($container, "mute", true);
 
 
 
@@ -748,8 +756,7 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
       .attr('max', seitenanzahl);
 
     $controls.find('.pdf-download')
-      .attr('href', download_pdf_link)
-      .attr('download', '');
+      .attr('href', download_pdf_link);
 
     $controls.find('.bt-options').attr('data-book-id', buch_id);
     $controls.find('.slider').attr('data-book-id', buch_id);
@@ -812,14 +819,21 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
     }
 
     if (sound === true) {
-      $controls.find('.bt-icon-sound').addClass('sound_on');
+      const $sound_btn = $controls.find('.bt-icon-sound');
+      $sound_btn.addClass('sound_on');
       //sound enable or disable in intsanz
       PageFlipRegistry[buch_id.replace("#", "")].sound = true;
+        if (mute_sound === true) {
+          $sound_btn.removeClass("sound_off").addClass("sound_on");
+        } else {
+          $sound_btn.removeClass("sound_on").addClass("sound_off");
+        }
 
     }
     else {
       PageFlipRegistry[buch_id.replace("#", "")].sound = false;
     }
+
 
     // transform
     if (!transform) {
@@ -872,6 +886,9 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
     $buch.parent().wrap('<div class="pdf_book_container"></div>');
     $buch.parent().parent().wrap('<div class="pdf_book_fullscreen"></div>');
 
+    //tabindex = 0 hinzufügen
+    $buch.attr("tabindex", "0");
+
     // Jetzt NEU suchen
     const $fullscreenWrapper = $buch.closest('.pdf_book_fullscreen');
 
@@ -886,8 +903,8 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
     if (inside_button == true) {
       //next prev_button
       $buch.prepend("<div class='clear_float'></div>");
-      $buch.prepend("<div class='next_inside next' data-pdf-book='" + buch_id + "'><i class='bi bi-arrow-right-square-fill'></i></div>");
-      $buch.prepend("<div class='prev_inside prev' data-pdf-book='" + buch_id + "'><i class='bi bi-arrow-left-square-fill'></i></div>");
+      $buch.prepend("<button  type='button' class='btn btn-lg next_inside next' data-pdf-book='" + buch_id + "'><i class='bi bi-arrow-right-square-fill'></i></button>");
+      $buch.prepend("<button  type='button' class='btn btn-lg prev_inside prev' data-pdf-book='" + buch_id + "'><i class='bi bi-arrow-left-square-fill'></i></button>");
     }
 
     // --------------------------------------------------------------------------------------------------
@@ -909,12 +926,23 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
 
     //vor dem umblättern
   pageFlip_Instanz.on("beforeFlip", (e) => {
+  
+/*
       const mp3_path = Joomla.getOptions('system.paths').root + "/media/plg_content_stpageflip/sounds/turn.mp3";
       const flipSound = new Audio(mp3_path);
-    if (PageFlipRegistry[buch_id.replace("#", "")].sound == true && userInteracted == true) {
+      let current_sound_state;
+      
+      if ($('.bt-options[data-book-id="' + buch_id + '"]').find('.bt-icon-sound').hasClass('sound_off')){
+       current_sound_state = false; 
+      }
+      else{
+        current_sound_state = true;
+      }
+    
+    if (PageFlipRegistry[buch_id.replace("#", "")].sound == true && userInteracted == true && current_sound_state == true) {
         flipSound.currentTime = 0;
         flipSound.play();
-      }
+      }*/
   });
 
 
@@ -943,6 +971,25 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
 // ide funktionen der einzelnen Buttons
 //functionen für die controll_buttons#########################################################################################################
 //############################################################################################################################################
+function play_sound(buch_id){
+    buch_id = "#"+buch_id;
+    const mp3_path = Joomla.getOptions('system.paths').root + "/media/plg_content_stpageflip/sounds/turn.mp3";
+      const flipSound = new Audio(mp3_path);
+      let current_sound_state;
+      
+      if ($('.bt-options[data-book-id="' + buch_id + '"]').find('.bt-icon-sound').hasClass('sound_off')){
+       current_sound_state = false; 
+      }
+      else{
+        current_sound_state = true;
+      }
+    
+      if (PageFlipRegistry[buch_id.replace("#", "")].sound == true && userInteracted == true && current_sound_state == true) {
+        flipSound.currentTime = 0;
+        flipSound.play();
+      }
+}
+
 function go_to_page(id, site) {
   const flipInstance = PageFlipRegistry[id]?.instance;
   if (flipInstance) {
@@ -969,6 +1016,15 @@ function download_pdf(pfad) {
 function prev_pdf(id) {
   const flipInstance = PageFlipRegistry[id]?.instance;
   if (flipInstance) {
+
+     const first_site = 0;
+     const current_site = flipInstance.getCurrentPageIndex();
+
+     if (current_site <= first_site ){
+      //erste seite erreicht, kein zurück
+      return;
+     }
+    play_sound(id);
     flipInstance.flipPrev(); // 1-basiert → 0-basiert
   }
 }
@@ -976,6 +1032,15 @@ function prev_pdf(id) {
 function next_pdf(id) {
   const flipInstance = PageFlipRegistry[id]?.instance;
   if (flipInstance) {
+     
+      const last_site = flipInstance.getPageCount();
+      const current_site = flipInstance.getCurrentPageIndex() +1;
+    
+    if (current_site >= last_site ){
+      //erste seite erreicht, kein zurück
+      return;
+     }
+    play_sound(id);
     flipInstance.flipNext(); // 1-basiert → 0-basiert
   }
 }
@@ -1076,23 +1141,21 @@ function zoom_reset_pdf(buch_id) {
 
 
 function updateFullscreenButton($controls, isFullscreen) {
-  console.log(isFullscreen);
   $controls.find(".fullscreen").each(function () {
     const $btn = jQuery(this);
-    const $btn_ico = $btn.closest(".bt-options").find(".bi");
+    const $btn_ico = $btn.find("i");
     if (isFullscreen) {
       $btn.closest(".bt-options").attr("data-original_color" ,$btn_ico.css("color"));
-      $btn.removeClass("bi-fullscreen").addClass("bi-fullscreen-exit");
+      $btn_ico.removeClass("bi-fullscreen").addClass("bi-fullscreen-exit");
       $btn.closest(".controls").addClass("controls_fullscreen");
     } else {
-      $btn.removeClass("bi-fullscreen-exit").addClass("bi-fullscreen");
+      $btn_ico.removeClass("bi-fullscreen-exit").addClass("bi-fullscreen");
       $btn.closest(".controls").removeClass("controls_fullscreen");
     }
   });
 }
 
-function fullscreen_pdf(id) {
-  console.log("test");
+function fullscreen_pdf(id, $btn) {
   const $flipbook = jQuery(id);
   const $container = $flipbook.closest(".pdf_book_fullscreen");
   const $controls = $container.find(".controls").length > 0
@@ -1477,5 +1540,32 @@ jQuery(function($) {
       $flipbook.attr("data-dbl-zoomed", "true");
     }
   });
+
+  
+    document.querySelector('.ui-flipbook').addEventListener('keydown', function(event) {
+      if (event.key === 'ArrowRight') {
+         next_pdf(this.id);
+      } else if (event.key === 'ArrowLeft') {
+         prev_pdf(this.id);
+      }
+    });
+  document.addEventListener("click", function (e) {
+  const pageImage = e.target.closest(".page-image");
+  if (pageImage) {
+    const flipBook = pageImage.closest(".flip-book");
+    if (flipBook) {
+      flipBook.focus();
+    }
+  }
+});
+   
+
+ document.querySelector('.ui-flipbook').addEventListener('click', function(e) {
+   const el = e.target;
+  // Alle Attribute auflisten
+  for (let attr of el.attributes) {
+    console.log(`${attr.name} = "${attr.value}"`);
+  }
+});
 
 });
