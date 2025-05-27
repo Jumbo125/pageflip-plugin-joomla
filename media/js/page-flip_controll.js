@@ -184,7 +184,7 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
     <label>
       Seite <span class="current_page"></span> von <span class="all_sites"></span><br />
       Umblättern:</label><br />
-      <input type="range" class="pdf-book-slider" data-pdf-book="pdf_id" min="1" max_seitanzahl="" step="1" value="1">
+      <input type="range" class="pdf-book-slider" data-pdf-book="pdf_id" min="1" data-max-seitanzahl="" step="1" value="1">
     
   </div>
 
@@ -470,7 +470,6 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
     }
 
   function initializeControls(pageFlip_Instanz) {
-
     //Seitennummer aktualisiern
     function update_pagenumber(pageFlip_Instanz, $buch) {
       const max_seitenAnzahl = pageFlip_Instanz.getPageCount();
@@ -492,7 +491,7 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
           //label zuweisen
           $slider.children("input").attr("id", "slider_" + $buch.attr("id"));
           $slider.children("label").attr("for", "slider_" + $buch.attr("id"));
-          
+
           //constrollleiste zuweisen
           $controll_leiste = $slider.parent();
         }
@@ -509,6 +508,9 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
 
             // Slider-Maximum setzen
           $controll_leiste.find('.pdf-book-slider').attr("max", last_site);
+
+          $controll_leiste.find('.pdf-book-slider').attr("data-max-seitenanzahl", last_site);
+          
 
           if (!portrait) {
             // Doppelseiten-Modus (nicht erste/letzte Seite)
@@ -756,7 +758,8 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
       .attr('max', seitenanzahl);
 
     $controls.find('.pdf-download')
-      .attr('href', download_pdf_link);
+      .attr('data-download-path', download_pdf_link);
+    
 
     $controls.find('.bt-options').attr('data-book-id', buch_id);
     $controls.find('.slider').attr('data-book-id', buch_id);
@@ -1004,6 +1007,9 @@ function home_pdf(id) {
 }
 
 function download_pdf(pfad) {
+  if (pfad == ""){
+    return;
+  }
   const link = document.createElement("a");
   const filename = pfad.split('/').pop(); // letzter Teil des Pfads
   link.href = pfad;
@@ -1354,7 +1360,7 @@ jQuery(function($) {
 
   // Download Button
   $(document).on("click", ".bt-options .pdf-download", function () {
-    const pfad = $(this).attr("href");
+    const pfad = $(this).attr("data-download-path");
     download_pdf(pfad);
   });
 
