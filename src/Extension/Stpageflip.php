@@ -147,13 +147,17 @@ class Stpageflip extends CMSPlugin
 } elseif (isset($article->product_s_desc)) {
     $textProperty = 'product_s_desc';
 } else {
-    Factory::getApplication()->enqueueMessage('⚠️ Keine geeignete Text-Property gefunden.', 'warning');
-    return;
+    if ($this->params->get('debug_mode', 0)) {
+        Factory::getApplication()->enqueueMessage('⚠️ Keine geeignete Text-Property gefunden.', 'warning');
+        return;
+    }
 }
 
 if (empty($article->{$textProperty})) {
-    Factory::getApplication()->enqueueMessage('⚠️ Kein Inhalt in ' . $textProperty, 'warning');
-    return;
+    if ($this->params->get('debug_mode', 0)) {
+        Factory::getApplication()->enqueueMessage('⚠️ Kein Inhalt in ' . $textProperty, 'warning');
+        return;
+    }
 }
 
 
