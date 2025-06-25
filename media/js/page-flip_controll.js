@@ -307,7 +307,7 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
   //Wenn data_width responsive gesetzt ist, holt js automatisch die vorhandene größe des parent divs und setzt das Bild auf diese größe
   if (data_width == "responsive") {
     data_width = $container.width();
-    data_height = data_width * aspect_ratio;
+    data_height = data_width / aspect_ratio;
   }
   // Wenn din_format gesetzt ist, hole den aspect_ratio
   if (din_format !== "not_use") {
