@@ -28,18 +28,33 @@ use Joomla\Event\SubscriberInterface;
 use Joomla\CMS\Language\Text;
 use Joomla\Filesystem\Folder;
 
-class Stpageflip extends CMSPlugin implements SubscriberInterface
+class Stpageflip extends CMSPlugin
 {
-    private function parseAttributes(string $string): array
-    {
-        $string = html_entity_decode($string, ENT_QUOTES);
-        $attrs = [];
-        preg_match_all('/([\w\-]+)\s*=\s*"([^"]*)"/', $string, $matches, PREG_SET_ORDER);
-        foreach ($matches as $m) {
-            $attrs[$m[1]] = $m[2];
-        }
-        return $attrs;
+   private function parseAttributes(string $string): array
+{
+    if ($this->params->get('debug_mode', 0)) {
+    Factory::getApplication()->enqueueMessage('🔍 parseAttributes() wurde aufgerufen');
     }
+
+    $string = html_entity_decode($string, ENT_QUOTES);
+    $attrs = [];
+
+    preg_match_all('/([\w\-]+)\s*=\s*"([^"]*)"/', $string, $matches, PREG_SET_ORDER);
+    if ($this->params->get('debug_mode', 0)) {
+        if (!empty($matches)) {
+            Factory::getApplication()->enqueueMessage('📘 Attribute gefunden: ' . count($matches));
+        } else {
+            Factory::getApplication()->enqueueMessage('⚠️ Keine Attribute im String: ' . $string);
+        }
+    }
+
+    foreach ($matches as $m) {
+        $attrs[$m[1]] = $m[2];
+    }
+
+    return $attrs;
+}
+
 
     private function generateBookHtml(array $attrs): string
     {
@@ -91,12 +106,14 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
         return $html;
     }
 
+    /*
     public static function getSubscribedEvents(): array
     {
         return [
             'onContentPrepare' => 'handleBookShortcodes',
         ];
-    }
+    }*/
+
 
     public function handleBookShortcodes(Event $event)
     {
@@ -119,16 +136,30 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
 
         [$context, $article, $params, $page] = array_values($event->getArguments());
 
-        if (!is_object($article) || empty($article->text)) {
-            return;
-        }
-        if (!isset($article->id) || !isset($article->alias)) {
+       if (!is_object($article)) {
             return;
         }
 
+   if (isset($article->text)) {
+    $textProperty = 'text';
+} elseif (isset($article->product_desc)) {
+    $textProperty = 'product_desc';
+} elseif (isset($article->product_s_desc)) {
+    $textProperty = 'product_s_desc';
+} else {
+    Factory::getApplication()->enqueueMessage('⚠️ Keine geeignete Text-Property gefunden.', 'warning');
+    return;
+}
+
+if (empty($article->{$textProperty})) {
+    Factory::getApplication()->enqueueMessage('⚠️ Kein Inhalt in ' . $textProperty, 'warning');
+    return;
+}
+
+
         //Debugg modus einfuegen
         // Debug-Input an den Artikel anhängen (frühzeitig)
-        $article->text .= $debugInput;
+        $article->{$textProperty} .= $debugInput;
 
         // Plugin läuft, aber tut nichts
         //Factory::getApplication()->enqueueMessage('Stpageflip Plugin: Testlauf');
@@ -138,7 +169,7 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
         $hasBookTag = false;
         $firstMatch = [];
 
-        if (preg_match_all($regex, $article->text, $matches, PREG_SET_ORDER)) {
+        if (preg_match_all($regex, $article->{$textProperty}, $matches, PREG_SET_ORDER)) {
             $hasBookTag = true;
 
             // Nur den ersten Tag zur Pfadermittlung nutzen
@@ -147,7 +178,7 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
             foreach ($matches as $match) {
                 $attributes = $this->parseAttributes($match[1]);
                 $html = $this->generateBookHtml($attributes);
-                $article->text = str_replace($match[0], $html, $article->text);
+                $article->{$textProperty} = str_replace($match[0], $html, $article->{$textProperty});
             }
         } else {
             // Kein gültiger [book]-Tag? → Abbrechen
@@ -171,11 +202,11 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
         if ($this->params->get('load_bootstrap', 0)) {
             $wa->useAsset('style', 'pageflip_bootstrap');
             if ($debug_mode) {
-                $article->text .= "<p class='alert alert-info'>" . Text::_('PLG_PAGEFLIP_DEBUG_BOOTSTRAP_LOADED') . "</p>";
+                $article->{$textProperty} .= "<p class='alert alert-info'>" . Text::_('PLG_PAGEFLIP_DEBUG_BOOTSTRAP_LOADED') . "</p>";
             }
         } else {
             if ($debug_mode) {
-                $article->text .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_BOOTSTRAP_NOT_LOADED') . "</p>";
+                $article->{$textProperty} .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_BOOTSTRAP_NOT_LOADED') . "</p>";
             }
         }
 
@@ -183,11 +214,11 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
         if ($this->params->get('load_bootstrap_icons', 1)) {
             $wa->useAsset('style', 'pageflip_bootstrap_ico');
             if ($debug_mode) {
-                $article->text .= "<p class='alert alert-info'>" . Text::_('PLG_PAGEFLIP_DEBUG_ICONS_LOADED') . "</p>";
+                $article->{$textProperty} .= "<p class='alert alert-info'>" . Text::_('PLG_PAGEFLIP_DEBUG_ICONS_LOADED') . "</p>";
             }
         } else {
             if ($debug_mode) {
-                $article->text .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_ICONS_NOT_LOADED') . "</p>";
+                $article->{$textProperty} .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_ICONS_NOT_LOADED') . "</p>";
             }
         }
 
@@ -195,11 +226,11 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
         if ($this->params->get('load_jqueryui', 1)) {
             $wa->useAsset('script', 'pageflip_jquery_ui_draggable');
             if ($debug_mode) {
-                $article->text .= "<p class='alert alert-info'>" . Text::_('PLG_PAGEFLIP_DEBUG_JQUERYUI_LOADED') . "</p>";
+                $article->{$textProperty} .= "<p class='alert alert-info'>" . Text::_('PLG_PAGEFLIP_DEBUG_JQUERYUI_LOADED') . "</p>";
             }
         } else {
             if ($debug_mode) {
-                $article->text .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_JQUERYUI_NOT_LOADED') . "</p>";
+                $article->{$textProperty} .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_JQUERYUI_NOT_LOADED') . "</p>";
             }
         }
 
@@ -235,12 +266,12 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
                     }
                 }
                 if ($debug_mode == true) {
-                    $article->text .= "<p class='alert alert-info'>" . Text::_('PLG_PAGEFLIP_DEBUG_IMG_FOLDER_FOUND') . ": " . $imgFolder . " </p>";
+                    $article->{$textProperty} .= "<p class='alert alert-info'>" . Text::_('PLG_PAGEFLIP_DEBUG_IMG_FOLDER_FOUND') . ": " . $imgFolder . " </p>";
                 }
             } else {
                 //Factory::getApplication()->enqueueMessage('Img Ordner nicht gefunden');
                 if ($debug_mode == true) {
-                    $article->text .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_IMG_FOLDER_NOT_FOUND') . ": " . $imgFolder . " </p>";
+                    $article->{$textProperty} .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_IMG_FOLDER_NOT_FOUND') . ": " . $imgFolder . " </p>";
                 }
             }
 
@@ -251,11 +282,11 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
                     }
                 }
                 if ($debug_mode == true) {
-                    $article->text .= "<p class='alert alert-info'>" . Text::_('PLG_PAGEFLIP_DEBUG_PDF_FOLDER_FOUND') . ": " . $pdfFolder . " </p>";
+                    $article->{$textProperty} .= "<p class='alert alert-info'>" . Text::_('PLG_PAGEFLIP_DEBUG_PDF_FOLDER_FOUND') . ": " . $pdfFolder . " </p>";
                 }
             } else {
                 if ($debug_mode == true) {
-                    $article->text .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_PDF_FOLDER_NOT_FOUND') . ": " . $pdfFolder . ". " . Text::_('PLG_PAGEFLIP_DEBUG_FOLDER_HINT') . ": " . JPATH_ROOT . "/images/stpageflip/ </p>";
+                    $article->{$textProperty} .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_PDF_FOLDER_NOT_FOUND') . ": " . $pdfFolder . ". " . Text::_('PLG_PAGEFLIP_DEBUG_FOLDER_HINT') . ": " . JPATH_ROOT . "/images/stpageflip/ </p>";
                 }
             }
 
@@ -263,28 +294,28 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
             //Falls keine Bilder vorhanden sind, jedoch aber ein Pdf, dann erstelle die bilder automatisch mit imgmagic
             if (empty($imageFiles) && !empty($pdfFiles)) {
                 if ($debug_mode == true) {
-                    $article->text .= "<p class='alert alert-warning'>" . Text::_('PLG_PAGEFLIP_DEBUG_IMG_FOLDER_PDF_NO_IMAGES') . ": " . $imgFolder . ". " . Text::_('PLG_PAGEFLIP_DEBUG_IMG_AUTOGENERATE') . "</p>";
+                    $article->{$textProperty} .= "<p class='alert alert-warning'>" . Text::_('PLG_PAGEFLIP_DEBUG_IMG_FOLDER_PDF_NO_IMAGES') . ": " . $imgFolder . ". " . Text::_('PLG_PAGEFLIP_DEBUG_IMG_AUTOGENERATE') . "</p>";
                 }
                 if (!extension_loaded('imagick')) {
-                    $article->text .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_IMAGICK_NOT_AVAILABLE') . "</p>";
+                    $article->{$textProperty} .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_IMAGICK_NOT_AVAILABLE') . "</p>";
                 } else {
                     if ($debug_mode == true) {
                         $version = \Imagick::getVersion();
-                        $article->text .= "<p class='alert alert-warning'>" . Text::_('PLG_PAGEFLIP_DEBUG_IMAGICK_AVAILABLE') . ": " . $version['versionString'] . ". <br> " . Text::_('PLG_PAGEFLIP_DEBUG_AUTOGEN_POSSIBLE') . "<br> " . Text::_('PLG_PAGEFLIP_DEBUG_FIRST_PDF_USED') . "</p>";
+                        $article->{$textProperty} .= "<p class='alert alert-warning'>" . Text::_('PLG_PAGEFLIP_DEBUG_IMAGICK_AVAILABLE') . ": " . $version['versionString'] . ". <br> " . Text::_('PLG_PAGEFLIP_DEBUG_AUTOGEN_POSSIBLE') . "<br> " . Text::_('PLG_PAGEFLIP_DEBUG_FIRST_PDF_USED') . "</p>";
                     }
 
                     //je nach XML DATEI------------------------------------
                     $createImages = (int) $this->params->get('create_img', 0);
                     if ($createImages && empty($imageFiles) && !empty($pdfFiles)) {
 
-                        $article->text .= "<p class='alert alert-success'>" . Text::_('PLG_PAGEFLIP_DEBUG_IMG_AUTOGEN_ENABLED') . "</p>";
+                        $article->{$textProperty} .= "<p class='alert alert-success'>" . Text::_('PLG_PAGEFLIP_DEBUG_IMG_AUTOGEN_ENABLED') . "</p>";
                         //Bilder automatisch generieren --------------------------------------------------
                         $filename = $pdfFiles[0]; // PDF-Datei im gleichen Verzeichnis
                         $outputPrefix = 'seite_';         // Präfix für WebP-Dateien
                         $pdfPath =   $imgFolder . '/' . $filename;
 
                         if (!file_exists($pdfPath)) {
-                            $article->text .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_PDF_NOT_FOUND') . ": " .  $pdfPath . "</p>";
+                            $article->{$textProperty} .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_PDF_NOT_FOUND') . ": " .  $pdfPath . "</p>";
                         } else {
                             try {
                                 // Neue Imagick-Instanz mit dem PDF
@@ -303,17 +334,17 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
                                     //erstelle bilder in img array ewinfügen
 
                                 }
-                                $article->text .= "<p class='alert alert-success'>" . $create_txt  . "</p>";
+                                $article->{$textProperty} .= "<p class='alert alert-success'>" . $create_txt  . "</p>";
 
                                 $imagick->clear();
                                 $imagick->destroy();
-                                $article->text .= "<p class='alert alert-success'>" . Text::_('PLG_PAGEFLIP_DEBUG_ALL_CONVERTED') . "</p>";
+                                $article->{$textProperty} .= "<p class='alert alert-success'>" . Text::_('PLG_PAGEFLIP_DEBUG_ALL_CONVERTED') . "</p>";
                             } catch (Exception $e) {
-                                $article->text .= "<p class='alert alert-success'>" . Text::_('PLG_PAGEFLIP_DEBUG_ERROR') . ": " . $e->getMessage() . "</p>";
+                                $article->{$textProperty} .= "<p class='alert alert-success'>" . Text::_('PLG_PAGEFLIP_DEBUG_ERROR') . ": " . $e->getMessage() . "</p>";
                             }
                         }
                     } else {
-                        $article->text .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_IMG_AUTOGEN_DISABLED') . "</p>";
+                        $article->{$textProperty} .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_IMG_AUTOGEN_DISABLED') . "</p>";
                     }
                 }
             }
@@ -322,7 +353,7 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
             if (!empty($imageFiles)) {
 
                 if ($debug_mode == true) {
-                    $article->text .= "<p class='alert alert-success'>" . Text::_('PLG_PAGEFLIP_DEBUG_IMAGES_PRESENT') . "</p>";
+                    $article->{$textProperty} .= "<p class='alert alert-success'>" . Text::_('PLG_PAGEFLIP_DEBUG_IMAGES_PRESENT') . "</p>";
                 }
 
                 $fileList = implode(',', $imageFiles);
@@ -330,7 +361,7 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
                 $inputHtml = '<input id="' . htmlspecialchars($bookId . '_img_files', ENT_QUOTES) . '" type="hidden" value="' . htmlspecialchars($fileList, ENT_QUOTES) . '"';
 
                 if ($debug_mode == true) {
-                    $article->text .= "<p class='alert alert-info'>" . Text::_('PLG_PAGEFLIP_DEBUG_INPUT_TAG_INSERTED') . "<br> id='" . htmlspecialchars($bookId . "_img_files", ENT_QUOTES)  . "' type='hidden' value='" . htmlspecialchars($fileList, ENT_QUOTES) . "'</p>";
+                    $article->{$textProperty} .= "<p class='alert alert-info'>" . Text::_('PLG_PAGEFLIP_DEBUG_INPUT_TAG_INSERTED') . "<br> id='" . htmlspecialchars($bookId . "_img_files", ENT_QUOTES)  . "' type='hidden' value='" . htmlspecialchars($fileList, ENT_QUOTES) . "'</p>";
                 }
 
                 if (!empty($pdfList)) {
@@ -338,30 +369,47 @@ class Stpageflip extends CMSPlugin implements SubscriberInterface
                     $inputHtml .= ' data-pdf-src="' . htmlspecialchars(Uri::root() . $pdfList, ENT_QUOTES) . '"';
                     $inputHtml .= ' data-pdf-path="' . htmlspecialchars(Uri::root() . $pdfFolder, ENT_QUOTES) . '"';
                     if ($debug_mode == true) {
-                        $article->text .= "<p class='alert alert-info'>" . Text::_('PLG_PAGEFLIP_DEBUG_PDFS_FOUND') . ": " . $pdfList . " </p>";
+                        $article->{$textProperty} .= "<p class='alert alert-info'>" . Text::_('PLG_PAGEFLIP_DEBUG_PDFS_FOUND') . ": " . $pdfList . " </p>";
                     }
                 } else {
                     if ($debug_mode == true) {
-                        $article->text .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_NO_PDFS') . "</p>";
+                        $article->{$textProperty} .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_NO_PDFS') . "</p>";
                     }
                 }
 
                 if (!empty($fileList)) {
                     $inputHtml .= ' data-img-path="' . htmlspecialchars(Uri::root() . '/images/stpageflip/' . trim($attrs['img'], '/'), ENT_QUOTES) . '"';
                     if ($debug_mode == true) {
-                        $article->text .= "<p class='alert alert-info'>" . Text::_('PLG_PAGEFLIP_DEBUG_IMAGES_FOUND') . ": " . $fileList . " </p>";
+                        $article->{$textProperty} .= "<p class='alert alert-info'>" . Text::_('PLG_PAGEFLIP_DEBUG_IMAGES_FOUND') . ": " . $fileList . " </p>";
                     }
                 } else {
                     if ($debug_mode == true) {
-                        $article->text .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_NO_IMAGES') . "</p>";
+                        $article->{$textProperty} .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_NO_IMAGES') . "</p>";
                     }
                 }
 
                 $inputHtml .= '>';
-                $article->text .= $inputHtml;
+                $article->{$textProperty} .= $inputHtml;
             } else {
-                $article->text .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_NO_IMG_FILES') . ": '/images/stpageflip/" . trim($attrs['img'], '/') . "/'</p>";
+                $article->{$textProperty} .= "<p class='alert alert-danger'>" . Text::_('PLG_PAGEFLIP_DEBUG_NO_IMG_FILES') . ": '/images/stpageflip/" . trim($attrs['img'], '/') . "/'</p>";
             }
         }
     }
+public function onContentPrepare($context, &$article, &$params, $limit = 0)
+{
+    if ($debug_mode == true) {
+        \Joomla\CMS\Factory::getApplication()->enqueueMessage('✅ Plugin-Methode onContentPrepare wurde aufgerufen.');
+    }
+    $event = new \Joomla\Event\Event(
+        'onContentPrepare',
+        [
+            'context' => $context,
+            'article' => &$article,
+            'params' => &$params,
+            'page' => $limit
+        ]
+    );
+
+    $this->handleBookShortcodes($event);
+}
 }
