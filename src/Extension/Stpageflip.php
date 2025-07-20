@@ -404,6 +404,21 @@ public function onContentPrepare($context, &$article, &$params, $limit = 0)
     if ($debug_mode == true) {
         \Joomla\CMS\Factory::getApplication()->enqueueMessage('✅ Plugin-Methode onContentPrepare wurde aufgerufen.');
     }
+       // WebAssetManager holen
+    $wa = \Joomla\CMS\Factory::getApplication()->getDocument()->getWebAssetManager();
+
+    // Bootstrap laden, wenn in den Plugin-Optionen aktiviert
+    if ($this->params->get('load_bootstrap', 0)) {
+        $wa->getRegistry()->addRegistryFile('media/plg_content_stpageflip/joomla.asset.json');
+        $wa->useAsset('style', 'pageflip_bootstrap');
+        $wa->useAsset('style', 'pageflip_bootstrap_ico');
+    }
+
+    // Bootstrap Icons, falls gewünscht
+    if ($this->params->get('load_bootstrap_icons', 1)) {
+        $wa->useAsset('style', 'pageflip_bootstrap_ico');
+    }
+
     $event = new \Joomla\Event\Event(
         'onContentPrepare',
         [
