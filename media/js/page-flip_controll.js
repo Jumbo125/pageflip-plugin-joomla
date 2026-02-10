@@ -20,30 +20,30 @@ function show_debug_msg(text){
 //check if panzoom ferfügbar ist, stpageflip und jquery
 // jQuery prüfen
     if (typeof jQuery === 'function') {
-        show_debug_msg('✅ jQuery geladen');
+        show_debug_msg('jQuery geladen');
     } else {
-        show_debug_msg('❌ jQuery konnte nicht geladen werden');
+        show_debug_msg('jQuery konnte nicht geladen werden');
     }
 
     // St.PageFlip prüfen
     if (typeof St !== 'undefined' && typeof St.PageFlip === 'function') {
-        show_debug_msg('✅ St.PageFlip verfügbar');
+        show_debug_msg(' St.PageFlip verfügbar');
     } else {
-        show_debug_msg('❌ St.PageFlip NICHT verfügbar');
+        show_debug_msg(' St.PageFlip NICHT verfügbar');
     }
 
     // panzoom prüfen
   if (typeof window.Panzoom === 'function') {
-  console.log('✅ Panzoom vorhanden.');
+  console.log('Panzoom vorhanden.');
 
   // Optional: genauere Prüfung, aber OHNE DOM-Manipulation
   if (Panzoom.prototype?.zoomIn) {
-    console.log('✅ zoomIn-Methode verfügbar.');
+    console.log('zoomIn-Methode verfügbar.');
   } else {
-    console.warn('⚠️ zoomIn nicht im Prototype.');
+    console.warn('zoomIn nicht im Prototype.');
   }
 } else {
-  console.error('❌ Panzoom ist nicht verfügbar.');
+  console.error('Panzoom ist nicht verfügbar.');
 }
 
 //Detect brwose ios
@@ -265,7 +265,7 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
     { name: "A7", aspectRatio: 74 / 105 },
     { name: "A8", aspectRatio: 52 / 74 },
 
-    // 🖥️ Bildschirm-/Video-Formate
+    // Bildschirm-/Video-Formate
     { name: "16:9", aspectRatio: 16 / 9 },
     { name: "4:3", aspectRatio: 4 / 3 },
     { name: "3:2", aspectRatio: 3 / 2 },
@@ -273,12 +273,12 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
     { name: "1:1", aspectRatio: 1 },
     { name: "9:16", aspectRatio: 9 / 16 },
 
-    // 📸 Fotoformate
+    // Fotoformate
     { name: "5x7", aspectRatio: 5 / 7 },
     { name: "8x10", aspectRatio: 8 / 10 },
     { name: "2:3", aspectRatio: 2 / 3 },
 
-    // 📚 Flipbook-geeignet (Klassisch)
+    // Flipbook-geeignet (Klassisch)
     { name: "Portrait Standard", aspectRatio: 0.707 }, // z. B. für DIN A4
     { name: "Comic/Manga", aspectRatio: 0.65 },
     { name: "Square", aspectRatio: 1.0 },
@@ -397,9 +397,9 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
     const pages = document.querySelectorAll(`${buch_id} .page`);
     if (pages.length > 0) {
       pageFlip.loadFromHTML(pages);
-      show_debug_msg(`✅ ${pages.length} Seite(n) in PageFlip geladen für "${buch_id_without_idselector}".`);
+      show_debug_msg(`${pages.length} Seite(n) in PageFlip geladen für "${buch_id_without_idselector}".`);
     } else {
-      show_debug_msg(`❌ Keine Seiten gefunden für "${buch_id}" – PageFlip kann nicht initialisiert werden.`);
+      show_debug_msg(`Keine Seiten gefunden für "${buch_id}" – PageFlip kann nicht initialisiert werden.`);
     }
 
     $turn_js_container.data('has-turn', true);
@@ -416,9 +416,9 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
       PageFlipRegistry.hasOwnProperty(buch_id_without_idselector) &&
       PageFlipRegistry[buch_id_without_idselector]?.instance === pageFlip
     ) {
-      show_debug_msg(`✅ PageFlip-Instanz für "${buch_id_without_idselector}" in Registry gespeichert.`);
+      show_debug_msg(`PageFlip-Instanz für "${buch_id_without_idselector}" in Registry gespeichert.`);
     } else {
-      show_debug_msg(`❌ Fehler: PageFlip-Instanz konnte NICHT in Registry gespeichert werden für "${buch_id_without_idselector}".`);
+      show_debug_msg(`Fehler: PageFlip-Instanz konnte NICHT in Registry gespeichert werden für "${buch_id_without_idselector}".`);
     }
     //aktuelle position speichern um nach vreschie manöver zurückzusetzetn
 
@@ -1168,7 +1168,7 @@ function fullscreen_pdf(id, $btn) {
     ? $container.find(".controls")
     : $container.next(".controls");
 
-  // 👉 iOS-Fallback
+  // iOS-Fallback
   if (detectOS() === "iOS") {
     const isActive = $flipbook.attr("data-fullscreen-aktiv") === "true";
 
@@ -1199,7 +1199,7 @@ function fullscreen_pdf(id, $btn) {
     return;
   }
 
-  // 👉 Desktop-Fullscreen prüfen
+  // Desktop-Fullscreen prüfen
   const isFullscreen = document.fullscreenElement ||
     document.webkitFullscreenElement ||
     document.mozFullScreenElement ||
@@ -1507,7 +1507,7 @@ jQuery(function($) {
     init_panzoom_if_needed(id);
 
     if (!id || !PageFlipRegistry[id] || !PageFlipRegistry[id].panzoom) {
-      show_debug_msg("⚠️ Kein Panzoom-Instance gefunden für:", id);
+      show_debug_msg("Kein Panzoom-Instance gefunden für:", id);
       return;
     }
 
@@ -1540,7 +1540,7 @@ jQuery(function($) {
       setTimeout(() => {
         panzoomInstance.zoom(scale, { animate: false });
         panzoomInstance.pan(panX, panY, { animate: true });
-        show_debug_msg("✅ Zoom + Pan abgeschlossen:", { panX, panY });
+        show_debug_msg("Zoom + Pan abgeschlossen:", { panX, panY });
       }, 20);
 
       $flipbook.attr("data-dbl-zoomed", "true");
