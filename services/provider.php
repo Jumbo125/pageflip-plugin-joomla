@@ -29,7 +29,7 @@ return new class implements ServiceProviderInterface {
         $container->set(
             PluginInterface::class,
             function (Container $container) {
-                // ✅ Konfiguration aus Plugin laden!
+                // Konfiguration aus Plugin laden!
                 $config = (array) PluginHelper::getPlugin('content', 'stpageflip');
                 $dispatcher = $container->get(DispatcherInterface::class);
 
