@@ -146,6 +146,13 @@ This plugin integrates a realistic page-flipping book viewer into Joomla article
 
 This plugin integrates a realistic, page-flipping book viewer into Joomla articles – based on the stPageFlip library – featuring an enhanced user interface, zoom, fullscreen mode, sound effects, and more.
 
+## Support
+
+Donate with PayPal ☕
+Wenn dir das Projekt hilft und du mir einen Kaffee ausgeben willst:
+
+[![Donate with PayPal ☕](https://img.shields.io/badge/Donate-PayPal-00457C?logo=paypal&logoColor=white)](https://www.paypal.me/andreasrottmann92)
+
 ## English Translation
 
 ## 🧪 Key Features
@@ -281,6 +288,13 @@ This plugin integrates a realistic, page-flipping book viewer into Joomla articl
 *Use the `din_format` attribute to quickly apply a predefined aspect ratio.*
 
 ---
+
+## Support
+
+Donate with PayPal ☕ 
+If this project helps you, feel free to buy me a coffee:
+
+[![Donate with PayPal ☕](https://img.shields.io/badge/Donate-PayPal-00457C?logo=paypal&logoColor=white)](https://www.paypal.me/andreasrottmann92)
 
 ## 🧑‍💻 Autor
 
