@@ -63,7 +63,7 @@ class Stpageflip extends CMSPlugin
 
         $defaults = [
             'id' => $attrs['id'] ?? 'meinbuch',
-            'pdf-src' => !empty($attrs['pdf']) ? Uri::root() . 'images/stpageflip/' . trim($attrs['pdf'], '/') . '/' : '',
+            'pdf-src' => !empty($attrs['pdf']) ? rtrim(Uri::root(), '/') . '/images/stpageflip/' . trim($attrs['pdf'], '/') : '',
             'img-src' => !empty($attrs['img']) ? Uri::root() . 'images/stpageflip/' . trim($attrs['img'], '/') . '/' : '',
             'color' => $attrs['color'] ?? '#333',
             'color-hover' => $attrs['hover'] ?? '#c00',
