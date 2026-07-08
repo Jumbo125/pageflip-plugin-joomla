@@ -2,7 +2,7 @@
   <img src="https://github.com/Jumbo125/st-pageflip-enhanced/blob/main/a080723b-e63e-49d4-a9e1-f0487cf1188b.png" alt="st-pageflip-enhanced" width="300">
 </p>
 
-# 📖 ST PageFlip – Joomla 4 Extension
+# 📖 ST PageFlip – Joomla 4, 5, 6 Extension
 
 A Joomla 4 extension package that integrates the **StPageFlip** library as an interactive, page-flipping flipbook in the Joomla frontend — embedded via a simple shortcode. No database required. Books are subfolders inside `images/stpageflip/`.
 
