@@ -1,0 +1,64 @@
+{
+  "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+  "name": "PLG_CONTENT_STPAGEFLIP",
+  "type": "plugin",
+  "version": "2.0",
+  "description": "PLG Pageflip",
+  "license": "GPL",
+  "assets": [
+    {
+      "name": "pageflip_custom",
+      "type": "style",
+      "uri": "plg_content_stpageflip/css/custom.css"
+    },
+    {
+      "name": "pageflip_original",
+      "type": "style",
+      "uri": "plg_content_stpageflip/css/stPageFlip.css"
+    },
+    {
+      "name": "pageflip_bootstrap",
+      "type": "style",
+      "uri": "plg_content_stpageflip/css/bootstrap.css"
+    },
+    {
+      "name": "pageflip_bootstrap_ico",
+      "type": "style",
+      "uri": "plg_content_stpageflip/css/bootstrap_ico/bootstrap-icons.css"
+    },
+    {
+      "name": "pageflip_jquery_ui_draggable",
+      "type": "script",
+      "uri": "plg_content_stpageflip/js/jquery_ui_draggable.min.js",
+      "dependencies": ["jquery"]
+    },
+    {
+      "name": "pageflip_controll_pageflip",
+      "type": "script",
+      "uri": "plg_content_stpageflip/js/page-flip_controll.js",
+      "dependencies": ["pageflip_main"]
+    },
+    {
+      "name": "pageflip_main",
+      "type": "script",
+      "uri": "plg_content_stpageflip/js/page-flip.browser.modif.min.js",
+      "dependencies": ["jquery"]
+    },
+    {
+      "name": "pageflip_controll_panzoom",
+      "type": "script",
+      "uri": "plg_content_stpageflip/js/panzoom.min.js"
+    },
+    {
+      "name": "pageflip_admin",
+      "type": "script",
+      "uri": "plg_content_stpageflip/admin/pageflip-admin.js",
+      "dependencies": ["core"]
+    },
+    {
+      "name": "pageflip_admin_style",
+      "type": "style",
+      "uri": "plg_content_stpageflip/admin/pageflip-admin.css"
+    }
+  ]
+}

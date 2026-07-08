@@ -1,0 +1,17 @@
+{
+  "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+  "name": "PLG_EDITORSXTD_STPAGEFLIP",
+  "assets": [
+    {
+      "name": "stpageflip_editor_button",
+      "type": "script",
+      "uri": "plg_editorsxtd_stpageflip/stpageflip-editor-button.js",
+      "dependencies": ["core"]
+    },
+    {
+      "name": "stpageflip_editor_button_style",
+      "type": "style",
+      "uri": "plg_editorsxtd_stpageflip/stpageflip-editor-button.css"
+    }
+  ]
+}

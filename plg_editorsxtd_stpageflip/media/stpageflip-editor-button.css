@@ -1,0 +1,12 @@
+.stpageflip-editor-modal .modal-dialog {
+  max-width: 900px;
+}
+
+.stpageflip-editor-book {
+  border-bottom: 1px solid #dee2e6;
+  padding: 1rem 0;
+}
+
+.stpageflip-editor-modal .modal-content {
+  padding: 1%;
+}

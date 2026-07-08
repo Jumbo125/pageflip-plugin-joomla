@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <updates>
     <update>
-        <name>StPageFlip</name>
-        <description>StPageFlip Update</description>
-        <element>stpageflip</element>
-        <type>plugin</type>
-        <folder>content</folder>
-        <version>1.0.1</version>
-        <infourl title="StPageFlip">https://github.com/Jumbo125/pageflip-plugin-joomla</infourl>
+        <name>pkg_stpageflip</name>
+        <description>ST PageFlip Joomla package update</description>
+        <element>pkg_stpageflip</element>
+        <type>package</type>
+        <version>2.0</version>
+        <infourl title="ST PageFlip">https://github.com/Jumbo125/pageflip-plugin-joomla</infourl>
         <downloads>
             <downloadurl type="full" format="zip">
-                https://github.com/Jumbo125/pageflip-plugin-joomla/releases/download/v.1.0.1/pageflip_plugin_v.1.0.1.zip
+                https://github.com/Jumbo125/pageflip-plugin-joomla/releases/download/v2.0/pkg_stpageflip-2.0.zip
             </downloadurl>
         </downloads>
         <tags>stable</tags>
