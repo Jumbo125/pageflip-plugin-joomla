@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="editors-xtd" method="upgrade" version="4.0">
+    <name>PLG_EDITORSXTD_STPAGEFLIP</name>
+    <element>stpageflip</element>
+    <author>Andreas Rottmann</author>
+    <version>2.0</version>
+    <description>PLG_EDITORSXTD_STPAGEFLIP_XML_DESCRIPTION</description>
+    <services>
+        <serviceprovider file="services/provider.php" />
+    </services>
+    <namespace path="src">Joomla\Plugin\EditorsXtd\Stpageflip</namespace>
+    <files>
+        <folder plugin="stpageflip">services</folder>
+        <folder>src</folder>
+        <folder>language</folder>
+    </files>
+    <media destination="plg_editorsxtd_stpageflip" folder="media">
+        <file>joomla.asset.json</file>
+        <file>stpageflip-editor-button.js</file>
+        <file>stpageflip-editor-button.css</file>
+    </media>
+    <languages folder="language">
+        <language tag="de-DE">de-DE/plg_editorsxtd_stpageflip.ini</language>
+        <language tag="de-DE">de-DE/plg_editorsxtd_stpageflip.sys.ini</language>
+        <language tag="en-GB">en-GB/plg_editorsxtd_stpageflip.ini</language>
+        <language tag="en-GB">en-GB/plg_editorsxtd_stpageflip.sys.ini</language>
+    </languages>
+</extension>
