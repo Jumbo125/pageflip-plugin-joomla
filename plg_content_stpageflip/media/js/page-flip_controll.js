@@ -1479,11 +1479,6 @@ jQuery(function($) {
     }
   });
 
-  $(document).on('mouseenter mouseleave', '.ui-flipbook', function (e) {
-    mouse_over = (e.type === 'mouseenter');
-    mouse_over_id = mouse_over ? $(this).attr("id") : "";
-  });
-
   if (detectOS() !== "iOS" && detectOS() !== "Android") {
     window.addEventListener('wheel', function (e) {
       if (!mouse_over) return;
