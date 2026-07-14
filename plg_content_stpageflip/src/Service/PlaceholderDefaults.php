@@ -37,11 +37,14 @@ final class PlaceholderDefaults
         'fullscreen' => 'true',
         'sound' => 'false',
         'mute' => 'true',
+        'use-portrait' => 'true',
+        'portrait-breakpoint' => '600',
     ];
 
     private const BOOLEAN_KEYS = [
         'responsive',
         'center-single',
+        'use-portrait',
         'reflection',
         'tooltip',
         'transform',
