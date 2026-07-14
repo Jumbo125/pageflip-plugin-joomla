@@ -1,3 +1,4 @@
+
 (function ($) {
 
 //Debug modus
@@ -294,12 +295,17 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
   din_format = din_format !== undefined ? din_format : getAttrValue($container, "din_format", "not_use");
   density = density !== undefined ? density : getAttrValue($container, "density", "soft");
   single_center = single_center !== undefined ? single_center : getAttrBool($container, "center-single", false);
+  const use_portrait = getAttrBool($container, "use-portrait", true);
 
-
+  const portrait_breakpoint = parseInt(getAttrValue($container, "portrait-breakpoint", "600")) || 600;
+  const current_container_width = $container.width();
+  const is_narrow = portrait_breakpoint > 0 && current_container_width < portrait_breakpoint;
 
   //Wenn data_width responsive gesetzt ist, holt js automatisch die vorhandene größe des parent divs und setzt das Bild auf diese größe
   if (data_width == "responsive") {
-    data_width = $container.width();
+    // use-portrait="true" + schmal: volle Breite → Library erkennt Überlauf → Einzelseite
+    // alle anderen Fälle (use-portrait="false" ODER breites Gerät): halbe Breite → Doppelseite füllt Container
+    data_width = (use_portrait && is_narrow) ? current_container_width : current_container_width / 2;
     data_height = data_width / aspect_ratio;
   }
   // Wenn din_format gesetzt ist, hole den aspect_ratio
@@ -387,7 +393,8 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
         showCover: true,
         maxShadowOpacity: 0.5,
         mobileScrollSupport: true,
-        useMouseEvents: true
+        useMouseEvents: true,
+        usePortrait: use_portrait
       }
     );
     
@@ -1477,11 +1484,6 @@ jQuery(function($) {
       mouse_over = false;
       mouse_over_id = "";
     }
-  });
-
-  $(document).on('mouseenter mouseleave', '.ui-flipbook', function (e) {
-    mouse_over = (e.type === 'mouseenter');
-    mouse_over_id = mouse_over ? $(this).attr("id") : "";
   });
 
   if (detectOS() !== "iOS" && detectOS() !== "Android") {
