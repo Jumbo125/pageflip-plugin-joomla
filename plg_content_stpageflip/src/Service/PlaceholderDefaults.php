@@ -17,8 +17,9 @@ final class PlaceholderDefaults
         'aspect_ratio' => '0.707',
         'density' => 'soft',
         'center-single' => 'false',
-        'color' => '#333',
-        'hover' => '#c00',
+        'color' => '',
+        'hover' => '',
+        'slider-color' => '',
         'reflection' => 'false',
         'tooltip' => 'true',
         'transform' => 'true',
@@ -39,6 +40,8 @@ final class PlaceholderDefaults
         'mute' => 'true',
         'use-portrait' => 'true',
         'portrait-breakpoint' => '600',
+        'slider-label-font-size' => '',
+        'slider-icon-font-size'  => '',
     ];
 
     private const BOOLEAN_KEYS = [
@@ -69,6 +72,11 @@ final class PlaceholderDefaults
         'width',
         'height',
         'aspect_ratio',
+    ];
+
+    private const CSS_DIMENSION_KEYS = [
+        'slider-label-font-size',
+        'slider-icon-font-size',
     ];
 
     public static function getDefaults(): array
@@ -200,11 +208,15 @@ final class PlaceholderDefaults
             return self::sanitizeNumeric($key, (string) $value);
         }
 
+        if (\in_array($key, self::CSS_DIMENSION_KEYS, true)) {
+            return self::sanitizeCssDimension((string) $value);
+        }
+
         if ($key === 'id') {
             return self::sanitizeHtmlId((string) $value);
         }
 
-        if ($key === 'color' || $key === 'hover') {
+        if ($key === 'color' || $key === 'hover' || $key === 'slider-color') {
             return self::sanitizeColor((string) $value, self::DEFAULTS[$key]);
         }
 
@@ -240,6 +252,21 @@ final class PlaceholderDefaults
         $number = max(1, min(5000, $number));
 
         return (string) (int) round($number);
+    }
+
+    private static function sanitizeCssDimension(string $value): string
+    {
+        $value = trim($value);
+
+        if ($value === '') {
+            return '';
+        }
+
+        if (preg_match('/^\d+(\.\d+)?(px|em|rem|%|vw|vh|pt|cm|mm)$/i', $value)) {
+            return strtolower($value);
+        }
+
+        return '';
     }
 
     private static function sanitizeColor(string $value, string $fallback): string

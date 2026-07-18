@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="package" method="upgrade" version="4.0">
+    <name>pkg_stpageflip</name>
+    <packagename>stpageflip</packagename>
+    <author>Andreas Rottmann</author>
+    <version>2.0</version>
+    <description>ST PageFlip – Joomla 4 Paket (Content + Ajax + Editor-Button Plugin)</description>
+    <files folder="constituents">
+        <file type="plugin" id="stpageflip" group="content">plg_content_stpageflip.zip</file>
+        <file type="plugin" id="stpageflip" group="ajax">plg_ajax_stpageflip.zip</file>
+        <file type="plugin" id="stpageflip" group="editorsxtd">plg_editorsxtd_stpageflip.zip</file>
+    </files>
+</extension>

@@ -233,8 +233,9 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
       <i class="bi bi-fullscreen" ></i>
     </button>
 
-     <button  type="button"class="btn btn-lg bt-icon-sound" title="Sound">
+     <button  type="button" class="btn btn-lg bt-icon-sound" title="Sound">
       <abbr title="Sound"></abbr>
+      <i class="bi bi-volume-mute"></i>
     </button>
   </div>
 </div>
@@ -826,18 +827,16 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
 
     if (sound === true) {
       const $sound_btn = $controls.find('.bt-icon-sound');
-      $sound_btn.addClass('sound_on');
-      //sound enable or disable in intsanz
       PageFlipRegistry[buch_id.replace("#", "")].sound = true;
-        if (mute_sound === true) {
-          $sound_btn.removeClass("sound_off").addClass("sound_on");
-        } else {
-          $sound_btn.removeClass("sound_on").addClass("sound_off");
-        }
-
-    }
-    else {
+      if (mute_sound === true) {
+        $sound_btn.removeClass("sound_off").addClass("sound_on");
+        $sound_btn.find('i').removeClass('bi-volume-mute').addClass('bi-volume-up');
+      } else {
+        $sound_btn.removeClass("sound_on").addClass("sound_off");
+      }
+    } else {
       PageFlipRegistry[buch_id.replace("#", "")].sound = false;
+      $controls.find('.bt-icon-sound').addClass('pdf_control_none');
     }
 
 
@@ -906,6 +905,21 @@ show_debug_msg("controlls_for_book wird für Buch " + ID + " ausgeführt" );
     // blockiert StPageFlip's pointerdown-Events und verhindert das Drag-Blättern.
     $controls.find('.bt-icon-zoom-standard').addClass('pdf_control_none');
 
+    const sliderLabelFs = getAttrValue($container, 'slider-label-font-size', '');
+    const sliderIconFs  = getAttrValue($container, 'slider-icon-font-size', '');
+    const sliderColor   = getAttrValue($container, 'slider-color', '');
+    if (sliderLabelFs) {
+      const el = $controls.find('.slider').get(0);
+      if (el) el.style.setProperty('font-size', sliderLabelFs, 'important');
+    }
+    if (sliderIconFs) {
+      const el = $controls.find('.bt-options').get(0);
+      if (el) el.style.setProperty('font-size', sliderIconFs, 'important');
+    }
+    if (sliderColor) {
+      const el = $controls.find('.slider').get(0);
+      if (el) el.style.setProperty('color', sliderColor, 'important');
+    }
 
     //falls inline buttons erwünscht sind, werdend iese nun eingeügt
     if (inside_button == true) {
@@ -1458,8 +1472,10 @@ jQuery(function($) {
 
     if (isOn) {
       $icon.removeClass("sound_on").addClass("sound_off");
+      $icon.find('i').removeClass('bi-volume-up').addClass('bi-volume-mute');
     } else {
       $icon.removeClass("sound_off").addClass("sound_on");
+      $icon.find('i').removeClass('bi-volume-mute').addClass('bi-volume-up');
     }
 
     const buch_id = $(this).closest(".bt-options").attr("data-book-id").replace("#", "");
