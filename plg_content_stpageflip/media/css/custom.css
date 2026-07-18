@@ -6,7 +6,8 @@
   .flip-book {
     height: 300px;
     position: relative;
-    margin: 0 auto;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
   .page-image {
     background-size: cover;
@@ -103,8 +104,8 @@
 }
 
 .pdf_book_wrapper {
-   /* width: fit-content; */
-    margin: 0 auto;
+    display: block;
+    width: auto !important;
 }
 
 .bt-options {
@@ -174,28 +175,8 @@ button.btn.btn-lg:focus {
 
 
 
-.sound_on:before {
-    font-family: "bootstrap-icons";
-    content: "\F610";
-    font-style: normal;
-    font-weight: normal;
-    speak: never;
-    display: inline-block;
-    text-decoration: inherit;
-  }
 
-  
-.sound_off:before {
-    font-family: "bootstrap-icons";
-    content: "\F60C";
-    font-style: normal;
-    font-weight: normal;
-    speak: never;
-    display: inline-block;
-    text-decoration: inherit;
-  }
-
-  .fullscreen-enabled{
+.fullscreen-enabled{
     overflow:visible !important;
   }
 
