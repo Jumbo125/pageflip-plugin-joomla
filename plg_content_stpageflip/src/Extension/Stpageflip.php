@@ -20,6 +20,7 @@ final class Stpageflip extends CMSPlugin implements SubscriberInterface
 
     private static bool $debugInputRendered = false;
     private static bool $assetsLoaded = false;
+    private static bool $stylesLoaded = false;
 
     private ?PlaceholderParser $placeholderParser = null;
     private ?BookDirectoryService $bookDirectoryService = null;
@@ -46,13 +47,7 @@ final class Stpageflip extends CMSPlugin implements SubscriberInterface
             return;
         }
 
-        $buffer = (string) ($document->getBuffer('component') ?? '');
-
-        if (!str_contains($buffer, 'ui-flipbook')) {
-            return;
-        }
-
-        $this->loadAssets();
+        $this->loadStyles();
     }
 
     public function onContentPrepare(Event $event): void
@@ -188,21 +183,39 @@ final class Stpageflip extends CMSPlugin implements SubscriberInterface
 
         self::$assetsLoaded = true;
 
-        $wa   = Factory::getApplication()->getDocument()->getWebAssetManager();
-        $base = 'media/plg_content_stpageflip/';
+        $wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+
+        $this->loadStyles();
 
         if ($this->params->get('load_jquery', 0)) {
             $wa->useScript('jquery');
         }
 
-        $wa->registerAndUseStyle('pageflip_original', $base . 'css/stPageFlip.css');
-        $wa->registerAndUseStyle('pageflip_custom', $base . 'css/custom.css');
+        $base = 'media/plg_content_stpageflip/';
+
         $wa->registerAndUseScript('pageflip_main', $base . 'js/page-flip.browser.modif.min.js', [], [], ['jquery']);
         $wa->registerAndUseScript('pageflip_controll_panzoom', $base . 'js/panzoom.min.js');
 
         if ($this->params->get('load_jqueryui', 1)) {
             $wa->registerAndUseScript('pageflip_jquery_ui_draggable', $base . 'js/jquery_ui_draggable.min.js', [], [], ['jquery']);
         }
+
+        $wa->registerAndUseScript('pageflip_controll_pageflip', $base . 'js/page-flip_controll.js', [], [], ['jquery', 'pageflip_main']);
+    }
+
+    private function loadStyles(): void
+    {
+        if (self::$stylesLoaded) {
+            return;
+        }
+
+        self::$stylesLoaded = true;
+
+        $wa   = Factory::getApplication()->getDocument()->getWebAssetManager();
+        $base = 'media/plg_content_stpageflip/';
+
+        $wa->registerAndUseStyle('pageflip_original', $base . 'css/stPageFlip.css');
+        $wa->registerAndUseStyle('pageflip_custom', $base . 'css/custom.css');
 
         if ($this->params->get('load_bootstrap', 0)) {
             $wa->registerAndUseStyle('pageflip_bootstrap', $base . 'css/bootstrap.css');
@@ -211,8 +224,6 @@ final class Stpageflip extends CMSPlugin implements SubscriberInterface
         if ($this->params->get('load_bootstrap_icons', 1)) {
             $wa->registerAndUseStyle('pageflip_bootstrap_ico', $base . 'css/bootstrap_ico/bootstrap-icons.css');
         }
-
-        $wa->registerAndUseScript('pageflip_controll_pageflip', $base . 'js/page-flip_controll.js', [], [], ['jquery', 'pageflip_main']);
     }
 
     private function renderDebugMessage(string $message): string
